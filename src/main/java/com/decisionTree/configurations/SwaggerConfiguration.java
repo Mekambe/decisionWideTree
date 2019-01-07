@@ -1,4 +1,4 @@
-package com.pokemon.wiki.configurations;
+package com.decisionTree.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
