@@ -1,4 +1,4 @@
-package com.decisionTree.configurations;
+package com.decisionTree.wiki.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
