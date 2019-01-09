@@ -27,7 +27,7 @@ public class TreeLogicServiceImpl implements TreeLogicService {
     public QuestionDto getQuestionFromTree(int firstQuestion) {
 
         TreeDomain treeDomainParsed = treeRepository.findByRoot(firstQuestion);
-        QuestionsDomain questionDomainParsed = questionsDomainRepository.findByQuestion(firstQuestion);
+        QuestionsDomain questionDomainParsed = questionsDomainRepository.findByNumber(firstQuestion);
 
 
         QuestionDto questionDtoParsed = new QuestionDto();
