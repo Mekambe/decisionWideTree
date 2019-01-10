@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain, Long> {
+public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain, Integer> {
 
     QuestionsDomain findByNumber (int number);
 

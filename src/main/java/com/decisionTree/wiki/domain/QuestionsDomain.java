@@ -1,5 +1,6 @@
 package com.decisionTree.wiki.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -15,21 +16,22 @@ public class QuestionsDomain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long idQuestions;
+    private int idQuestions;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(cascade=CascadeType.ALL)
             @JoinColumn (name = "idQuestionGroup")
    QuestionGroupDomain questionHandler;
 
-    private long number;
+    private int number;
 
     private String question;
 
-    public long getIdQuestions() {
+    public int getIdQuestions() {
         return idQuestions;
     }
 
-    public void setIdQuestions(long idQuestions) {
+    public void setIdQuestions(int idQuestions) {
         this.idQuestions = idQuestions;
     }
 
@@ -41,11 +43,11 @@ public class QuestionsDomain {
         this.questionHandler = questionHandler;
     }
 
-    public long getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(long number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

@@ -15,11 +15,11 @@ public class UsersDomain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long idUser;
+    private int idUser;
 
     String name;
 
-    public long getIdUser() {
+    public int getIdUser() {
         return idUser;
     }
 

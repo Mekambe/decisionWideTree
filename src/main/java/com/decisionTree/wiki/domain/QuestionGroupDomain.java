@@ -14,14 +14,15 @@ import java.util.List;
 public class QuestionGroupDomain {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
-    private long idQuestionGroup;
+    @GeneratedValue //(strategy = GenerationType.AUTO)
+    private int idQuestionGroup;
 
-    @OneToMany (mappedBy = "questionHandler")
+
+    @OneToMany (mappedBy = "questionHandler", cascade=CascadeType.ALL)
     private List<QuestionsDomain>groupId = new ArrayList();
 
 
-    public long getIdQuestionGroup() {
+    public int getIdQuestionGroup() {
         return idQuestionGroup;
     }
 

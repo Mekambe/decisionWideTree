@@ -8,6 +8,7 @@ import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.domain.TreeDomain;
 import com.decisionTree.wiki.domain.UsersDomain;
+import com.decisionTree.wiki.dto.NewQuestionDto;
 import com.decisionTree.wiki.dto.QuestionDto;
 import com.decisionTree.wiki.exceptions.IdNotFound;
 import com.decisionTree.wiki.services.TreeLogicService;
@@ -40,103 +41,143 @@ public class QuestionsController {
     }
 
 
-    @GetMapping ("/questions")
-    public QuestionDto questionHandler (@PathParam("id") Integer id){
+    @GetMapping("/questions")
+    public QuestionDto questionHandler(@PathParam("id") int id) {
         QuestionDto questionFromTree = treeLogicService.getQuestionFromTree(id);
 
         return questionFromTree;
 
     }
 
-    @GetMapping ("/User/userId")
-    public Optional<UsersDomain> findUserById (@PathParam("uID") Long uID) throws IdNotFound {
+    @GetMapping("/User/userId")
+    public Optional<UsersDomain> findUserById(@PathParam("uID") int uID) throws IdNotFound {
         Optional<UsersDomain> byId = usersDomainRepository.findById(uID);
-        if(!byId.isPresent()) {throw new IdNotFound();}
+        if (!byId.isPresent()) {
+            throw new IdNotFound();
+        }
 
 
-     return byId;
+        return byId;
     }
 
     @GetMapping("/questions/questionID")
-    public Optional<QuestionsDomain> findQuestionById (@PathParam("qID") long qID) throws IdNotFound {
+    public Optional<QuestionsDomain> findQuestionById(@PathParam("qID") int qID) throws IdNotFound {
         Optional<QuestionsDomain> questionById = questionsDomainRepository.findById(qID);
-        if(!questionById.isPresent()) {throw new IdNotFound();}
+        if (!questionById.isPresent()) {
+            throw new IdNotFound();
+        }
 
         return questionById;
     }
 
     @GetMapping("/questionQroup/questionQroupID")
-    public Optional<QuestionGroupDomain> findQuestionGroupById (@PathParam("qqID")  long qqID) throws IdNotFound{
+    public Optional<QuestionGroupDomain> findQuestionGroupById(@PathParam("qqID") int qqID) throws IdNotFound {
 
         Optional<QuestionGroupDomain> questionGroupById = questionGroupRepository.findById(qqID);
-        if(!questionGroupById.isPresent()) {throw new IdNotFound();}
+        if (!questionGroupById.isPresent()) {
+            throw new IdNotFound();
+        }
 
         return questionGroupById;
 
     }
 
     @GetMapping("/tree/treeID")
-    public Optional<TreeDomain> findTreeById (@PathParam("tID") long tID) throws IdNotFound {
+    public Optional<TreeDomain> findTreeById(@PathParam("tID") int tID) throws IdNotFound {
 
         Optional<TreeDomain> TreeByID = treeRepository.findById(tID);
-        if(!TreeByID.isPresent()) {throw new IdNotFound();}
+        if (!TreeByID.isPresent()) {
+            throw new IdNotFound();
+        }
 
         return TreeByID;
     }
 
-    @DeleteMapping ("/User/deleteUser")
-    public void deleteUser (@PathParam ("id") long id) throws IdNotFound {
+    @DeleteMapping("/User/deleteUser")
+    public void deleteUser(@PathParam("id") int id) throws IdNotFound {
         Optional<UsersDomain> byId = usersDomainRepository.findById(id);
-        if(!byId.isPresent()) {throw new IdNotFound();}
-        byId.ifPresent(p->usersDomainRepository.delete(p));
+        if (!byId.isPresent()) {
+            throw new IdNotFound();
+        }
+        byId.ifPresent(p -> usersDomainRepository.delete(p));
     }
 
 
-     @DeleteMapping("/questions/deleteQuestion")
-    public void deleteQuestion (@PathParam("qID") Long qID) throws IdNotFound {
-         Optional<QuestionsDomain> deleteQuestionByID = questionsDomainRepository.findById(qID);
-         if(!deleteQuestionByID.isPresent()) {throw new IdNotFound();}
-         deleteQuestionByID.ifPresent(p->questionsDomainRepository.delete(p) );
+    @DeleteMapping("/questions/deleteQuestion")
+    public void deleteQuestion(@PathParam("qID") int qID) throws IdNotFound {
+        Optional<QuestionsDomain> deleteQuestionByID = questionsDomainRepository.findById(qID);
+        if (!deleteQuestionByID.isPresent()) {
+            throw new IdNotFound();
+        }
+        deleteQuestionByID.ifPresent(p -> questionsDomainRepository.delete(p));
 
-     }
+    }
 
-     @DeleteMapping("/questionQroup/deleteQuestionGroup")
-    public void deleteQuestionGroup (@PathParam("qqID") long qqID) throws IdNotFound{
-         Optional<QuestionGroupDomain> questionGroupID = questionGroupRepository.findById(qqID);
-         if(!questionGroupID.isPresent()) {throw new IdNotFound();}
-         questionGroupID.ifPresent(p->questionGroupRepository.delete(p) );
+    @DeleteMapping("/questionQroup/deleteQuestionGroup")
+    public void deleteQuestionGroup(@PathParam("qqID") int qqID) throws IdNotFound {
+        Optional<QuestionGroupDomain> questionGroupID = questionGroupRepository.findById(qqID);
+        if (!questionGroupID.isPresent()) {
+            throw new IdNotFound();
+        }
+        questionGroupID.ifPresent(p -> questionGroupRepository.delete(p));
 
-     }
+    }
 
-     @DeleteMapping("/tree/deleteTree")
-    public void deleteTree (@PathParam("tID") long tID) throws IdNotFound{
-         Optional<TreeDomain> treeID = treeRepository.findById(tID);
-         if(!treeID.isPresent()) {throw new IdNotFound();}
-         treeID.ifPresent(p->treeRepository.delete(p) );
+    @DeleteMapping("/tree/deleteTree")
+    public void deleteTree(@PathParam("tID") int tID) throws IdNotFound {
+        Optional<TreeDomain> treeID = treeRepository.findById(tID);
+        if (!treeID.isPresent()) {
+            throw new IdNotFound();
+        }
+        treeID.ifPresent(p -> treeRepository.delete(p));
 
-     }
+    }
 
-@PostMapping("/questions/addQuestion")
-    public ResponseEntity<Integer> addNewQuestion (@RequestParam(value="question") String question,
-                                                   @RequestParam(value="number") long number,
-                                                   @RequestParam(value="questionGroup") int groupId){
+
+//    @PostMapping ("/User/userUpdate")
+//    public int updateUser (@RequestBody UsersDomain usersDomain){
+//
+//
+//        Optional<UsersDomain> idPresent = usersDomainRepository.findById(usersDomain.getIdUser());
+//        if (idPresent.isPresent()) {
+//            usersDomain.setIdUser(idPresent.get());
+//        }else{usersDomainRepository.save(usersDomain);}
+//
+//     return 1;
+//
+//    }
+
+//    @PostMapping("/questions/questionUpdate")
+//    public int updateQuestion (@RequestBody NewQuestionDto newQuestionDto ){
+//
+//
+//
+//
+//
+//    }
+
+    @PostMapping("/questions/addQuestion")
+    public ResponseEntity<Integer> addNewQuestion(@RequestParam(value = "question") String question,
+                                                  @RequestParam(value = "number") int number,
+                                                  @RequestParam(value = "questionGroup") int groupId) {
+
 
         QuestionsDomain newQuestion = new QuestionsDomain();
-        QuestionGroupDomain group =  new QuestionGroupDomain();
-newQuestion.setQuestion(question);
-newQuestion.setNumber(number);
-newQuestion.setQuestionHandler(group);
-group.setIdQuestionGroup(groupId);
+        QuestionGroupDomain group = new QuestionGroupDomain();
+        newQuestion.setQuestion(question);
+        newQuestion.setNumber(number);
+        newQuestion.setQuestionHandler(group);
+        group.setIdQuestionGroup(groupId);
 
-    QuestionsDomain save = questionsDomainRepository.save(newQuestion);
-    return ResponseEntity.status(HttpStatus.CREATED).body(Math.toIntExact(save.getIdQuestions()));
 
+        QuestionsDomain save = questionsDomainRepository.save(newQuestion);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Math.toIntExact(save.getIdQuestions()));
 
 
     }
 
     @PostMapping("/User/addUser")
-    public ResponseEntity<Integer> addNewUser (@RequestParam(value = "name") String name){
+    public ResponseEntity<Integer> addNewUser(@RequestParam(value = "name") String name) {
 
         UsersDomain newUser = new UsersDomain();
         newUser.setName(name);
@@ -147,17 +188,39 @@ group.setIdQuestionGroup(groupId);
 
     }
 
+    @PostMapping("/questions/addQuestionBody")
+    public void addNewQuestionBody(@RequestBody NewQuestionDto newQuestionDto) {
 
+        Optional<QuestionsDomain> questionDomain = questionsDomainRepository.findById(newQuestionDto.getNumber());
+        if (questionDomain.isPresent()) {
+            questionDomain.get().setQuestion(newQuestionDto.getQuestion());
+            questionDomain.get().setNumber(newQuestionDto.getNumber());
 
+            Optional<QuestionGroupDomain> questionGroupDomain = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
+            if (questionGroupDomain.isPresent()) {
+                questionDomain.get().setQuestionHandler(questionGroupDomain.get());
+            } else {
+                QuestionGroupDomain group = new QuestionGroupDomain();
+                QuestionGroupDomain groupDomain = questionGroupRepository.save(group);
+                questionDomain.get().setQuestionHandler(groupDomain);
+            }
+            questionsDomainRepository.save(questionDomain.get());
 
+        } else
+        {
+            QuestionsDomain newQuestion = new QuestionsDomain();
+            newQuestion.setNumber(newQuestionDto.getNumber());
+            newQuestion.setQuestion(newQuestionDto.getQuestion());
+            Optional<QuestionGroupDomain> questionGroupDomain = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
+            if (questionGroupDomain.isPresent()) {
+                questionDomain.get().setQuestionHandler(questionGroupDomain.get());
+            } else {
+                QuestionGroupDomain group = new QuestionGroupDomain();
+                QuestionGroupDomain groupDomain = questionGroupRepository.save(group);
+                questionDomain.get().setQuestionHandler(groupDomain);
+            }
+            questionsDomainRepository.save(newQuestion);
+        }
 
-
-
-
-
-
-
-
-
-
+    }
 }
