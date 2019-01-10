@@ -12,31 +12,40 @@ import javax.persistence.*;
 public class QuestionsDomain {
 
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idQuestions;
+    private long idQuestions;
 
     @ManyToOne
             @JoinColumn (name = "idQuestionGroup")
    QuestionGroupDomain questionHandler;
 
-    private int number;
+    private long number;
 
     private String question;
 
-    public int getIdQuestions() {
+    public long getIdQuestions() {
         return idQuestions;
     }
 
-    public void setIdQuestions(int idQuestions) {
+    public void setIdQuestions(long idQuestions) {
         this.idQuestions = idQuestions;
     }
 
-    public int getNumber() {
+    public QuestionGroupDomain getQuestionHandler() {
+        return questionHandler;
+    }
+
+    public void setQuestionHandler(QuestionGroupDomain questionHandler) {
+        this.questionHandler = questionHandler;
+    }
+
+    public long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 

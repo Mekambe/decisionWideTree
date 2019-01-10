@@ -16,11 +16,19 @@ public class TreeDomain {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idTree;
+    private long idTree;
 
     private int root;
     private int left;
     private int right;
+
+    public long getIdTree() {
+        return idTree;
+    }
+
+    public void setIdTree(long idTree) {
+        this.idTree = idTree;
+    }
 
     public int getRoot() {
         return root;

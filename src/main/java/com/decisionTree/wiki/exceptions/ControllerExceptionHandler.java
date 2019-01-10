@@ -13,7 +13,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler  
 
     @ExceptionHandler(value = {IdNotFound.class})
 public ResponseEntity<Object> handlerError(Exception ex, WebRequest webRequest) {
-    String bodyError = "This is our error about pokemons";
+    String bodyError = "No ID found";
 
     return handleExceptionInternal(ex, bodyError, new HttpHeaders(), HttpStatus.I_AM_A_TEAPOT, webRequest);
 

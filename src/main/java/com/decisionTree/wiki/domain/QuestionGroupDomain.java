@@ -15,13 +15,13 @@ public class QuestionGroupDomain {
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
-    private int idQuestionGroup;
+    private long idQuestionGroup;
 
     @OneToMany (mappedBy = "questionHandler")
     private List<QuestionsDomain>groupId = new ArrayList();
 
 
-    public int getIdQuestionGroup() {
+    public long getIdQuestionGroup() {
         return idQuestionGroup;
     }
 
