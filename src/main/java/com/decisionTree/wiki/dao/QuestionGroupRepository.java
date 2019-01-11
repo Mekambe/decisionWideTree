@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QuestionGroupRepository extends JpaRepository<QuestionGroupDomain, Integer> {
+
+
+
 }

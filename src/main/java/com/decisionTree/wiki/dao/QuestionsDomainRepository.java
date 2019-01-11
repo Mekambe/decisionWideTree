@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain, Integer> {
 
     QuestionsDomain findByNumber (int number);
-
+QuestionsDomain findByQuestionHandler (int questionGroupNumber);
 }
