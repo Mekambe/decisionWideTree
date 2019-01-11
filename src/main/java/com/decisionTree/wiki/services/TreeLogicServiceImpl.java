@@ -1,5 +1,6 @@
 package com.decisionTree.wiki.services;
 
+import com.decisionTree.wiki.dao.QuestionGroupRepository;
 import com.decisionTree.wiki.dao.QuestionsDomainRepository;
 import com.decisionTree.wiki.dao.TreeRepository;
 import com.decisionTree.wiki.domain.QuestionGroupDomain;
@@ -9,19 +10,23 @@ import com.decisionTree.wiki.dto.QuestionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Random;
+
 
 @Service
 public class TreeLogicServiceImpl implements TreeLogicService {
 
     private QuestionsDomainRepository questionsDomainRepository;
     private TreeRepository treeRepository;
+    private QuestionGroupRepository questionGroupRepository;
 
     @Autowired
-    public TreeLogicServiceImpl( QuestionsDomainRepository questionsDomainRepository, TreeRepository treeRepository) {
+    public TreeLogicServiceImpl(QuestionsDomainRepository questionsDomainRepository, TreeRepository treeRepository, QuestionGroupRepository questionGroupRepository) {
         this.questionsDomainRepository = questionsDomainRepository;
         this.treeRepository = treeRepository;
+        this.questionGroupRepository = questionGroupRepository;
     }
-
 
 
     public QuestionDto getQuestionFromTree(int firstQuestion) {
@@ -40,6 +45,21 @@ public class TreeLogicServiceImpl implements TreeLogicService {
         return (questionDtoParsed);
 
 
-
     }
 }
+
+
+//    public QuestionsDomain randomTreeQuestion (QuestionGroupDomain idQuestionGroup ){
+//
+//
+////         Math.random(idQuestionGroup) * 100;
+////
+////        Random random = new Random();
+////        idQuestionGroup.getIdQuestionGroup(random.nextInt())
+////        QuestionsDomain randomQuestion = randomQuestionList.get(random.nextInt(randomQuestionList.size()));
+////
+////        return randomQuestion;
+////    }
+//
+//
+//}

@@ -18,6 +18,7 @@ public class UsersDomain {
     private int idUser;
 
     String name;
+    String admin;
 
     public int getIdUser() {
         return idUser;
@@ -33,5 +34,13 @@ public class UsersDomain {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 }

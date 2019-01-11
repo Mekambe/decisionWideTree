@@ -1,5 +1,6 @@
 package com.decisionTree.wiki.dao;
 
+import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain, Integer> {
 
     QuestionsDomain findByNumber (int number);
-QuestionsDomain findByQuestionHandler (int questionGroupNumber);
+    QuestionsDomain findByNumberAndQuestionHandler(int number, QuestionGroupDomain questionHandler);
+
 }
