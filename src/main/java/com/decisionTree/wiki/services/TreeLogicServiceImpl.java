@@ -49,17 +49,23 @@ public class TreeLogicServiceImpl implements TreeLogicService {
 }
 
 
-//    public QuestionsDomain randomTreeQuestion (QuestionGroupDomain idQuestionGroup ){
-//
-//
-////         Math.random(idQuestionGroup) * 100;
-////
-////        Random random = new Random();
-////        idQuestionGroup.getIdQuestionGroup(random.nextInt())
-////        QuestionsDomain randomQuestion = randomQuestionList.get(random.nextInt(randomQuestionList.size()));
-////
-////        return randomQuestion;
-////    }
-//
-//
-//}
+    public QuestionsDomain randomTreeQuestion (QuestionGroupDomain idQuestionGroup ){
+
+        Random random = new Random();
+    QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+        int idQuestionGroup1 = questionGroupDomain.getIdQuestionGroup();
+
+
+        Math.random(idQuestionGroup) * 100;
+
+        Random random = new Random();
+
+        idQuestionGroup.getIdQuestionGroup(random.nextInt());
+
+        QuestionsDomain randomQuestion = randomQuestionList.get(random.nextInt(randomQuestionList.size()));
+
+        return randomQuestion;
+    }
+
+
+}
