@@ -299,4 +299,15 @@ public class QuestionsController {
         }
 
     }
+
+    @GetMapping("/question/randomQuestion")
+    public List<QuestionsDomain> returnRandomQuestion (){
+
+        List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion();
+
+        return questionsDomains;
+    }
+
+
+
 }
