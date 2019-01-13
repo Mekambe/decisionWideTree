@@ -9,12 +9,16 @@ import com.decisionTree.wiki.dto.QuestionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Random;
+
 
 @Service
 public class TreeLogicServiceImpl implements TreeLogicService {
 
     private QuestionsDomainRepository questionsDomainRepository;
     private TreeRepository treeRepository;
+
 
     @Autowired
     public TreeLogicServiceImpl( QuestionsDomainRepository questionsDomainRepository, TreeRepository treeRepository) {
@@ -42,4 +46,19 @@ public class TreeLogicServiceImpl implements TreeLogicService {
 
 
     }
+
+    public QuestionGroupDomain randomQuestionHandler (){
+
+       QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+        int idQuestionGroup = questionGroupDomain.getIdQuestionGroup();
+        Random random = new Random();
+        int i = random.nextInt(idQuestionGroup);
+
+
+
+        return questionGroupDomain;
+
+
+    }
+
 }
