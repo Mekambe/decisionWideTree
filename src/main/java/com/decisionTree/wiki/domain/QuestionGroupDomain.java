@@ -14,12 +14,15 @@ import java.util.List;
 public class QuestionGroupDomain {
 
     @Id
-    @GeneratedValue //(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idQuestionGroup;
 
 
-    @OneToMany (mappedBy = "questionHandler", cascade=CascadeType.ALL)
+    @OneToMany (mappedBy = "questionHandler")
     private List<QuestionsDomain>groupId = new ArrayList();
+
+    private boolean active;
+
 
 
     public int getIdQuestionGroup() {
@@ -37,4 +40,14 @@ public class QuestionGroupDomain {
     public void setGroupId(List<QuestionsDomain> groupId) {
         this.groupId = groupId;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
 }

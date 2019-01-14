@@ -15,7 +15,7 @@ public class QuestionsDomain {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idQuestions;
 
     @JsonIgnore
