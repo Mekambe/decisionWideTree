@@ -227,19 +227,14 @@ public class QuestionsController {
 
     @PostMapping("/questions/updateQuestion")
     public void updateQuestions (@RequestBody NewQuestionDto newQuestionDto) {
-        Optional<QuestionGroupDomain> questionGroupNumber = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
-        if (questionGroupNumber.isPresent()){
-            QuestionsDomain byNumber = questionsDomainRepository.findByNumber(newQuestionDto.getNumber());
-              byNumber.setQuestion(newQuestionDto.getQuestion());
-              byNumber.setQuestionHandler(questionGroupNumber.get());
 
-              questionsDomainRepository.save(byNumber);
+        QuestionsDomain byNumber = questionsDomainRepository.findByNumber(newQuestionDto.getNumber());
+        byNumber.setNumber(byNumber.getNumber());
+        byNumber.setQuestion(newQuestionDto.getQuestion());
+        QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+        byNumber.setQuestionHandler(questionGroupDomain);
 
-
-
-
-        }
-
+        questionsDomainRepository.save(byNumber);
 
 
     }
@@ -322,6 +317,16 @@ public class QuestionsController {
         }
 
     }
+
+
+    @GetMapping("/question/randomQuestion")
+    public List<QuestionsDomain> returnRandomQuestion (){
+
+        List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion();
+
+        return questionsDomains;
+    }
+
 
 
 }
