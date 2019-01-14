@@ -10,6 +10,7 @@ import com.decisionTree.wiki.dto.QuestionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -51,19 +52,23 @@ public class TreeLogicServiceImpl implements TreeLogicService {
 
     public List<QuestionsDomain> randomTreeQuestion (){
 
-        Random random = new Random();
-        QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
-        List<QuestionsDomain> groupId = questionGroupDomain.getGroupId();
-        for (int i = 0; i <groupId.size() ; i++) {
-            int randomIndex = random.nextInt(groupId.size());
+        List <QuestionGroupDomain> allByQuestionHandlerIsTrue = questionGroupRepository.findAllByActive(true);
+        //takes out all active groups from GroupDomain
 
-            return groupId;
 
-        }
+
+        QuestionGroupDomain randomQuestionGroup = allByQuestionHandlerIsTrue.get(new Random().nextInt(allByQuestionHandlerIsTrue.size()));
+//random object
+
+        List<QuestionsDomain> groupId = randomQuestionGroup.getGroupId();
+
+
+
 
 
         return groupId;
     }
+
 
 
 }

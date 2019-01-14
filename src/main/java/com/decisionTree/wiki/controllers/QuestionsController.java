@@ -9,7 +9,9 @@ import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.domain.TreeDomain;
 import com.decisionTree.wiki.domain.UsersDomain;
 import com.decisionTree.wiki.dto.NewQuestionDto;
+import com.decisionTree.wiki.dto.NewQuestionGroupDto;
 import com.decisionTree.wiki.dto.QuestionDto;
+import com.decisionTree.wiki.exceptions.GroupNotFound;
 import com.decisionTree.wiki.exceptions.IdNotFound;
 import com.decisionTree.wiki.services.TreeLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,31 @@ public class QuestionsController {
     }
 
 
+    @GetMapping("/questions/findAllActive")
+    public List<QuestionGroupDomain> returnAllActiveQuestions () {
+        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllByActive(true);
+        return allByActive;
+
+    }
+
+    @GetMapping("/questions/findAllInactive")
+    public List<QuestionGroupDomain> returnAllInactiveQuestions () {
+        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllByActive(false);
+        return allByActive;
+
+    }
+    @GetMapping("/questions/findAllInSingleGroup")
+    public List<QuestionGroupDomain> returnAllSingleGroup () {
+        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllBySingle(true);
+        return allByActive;
+
+    }
+    @GetMapping("/questions/findAllInMultiGroup")
+    public List<QuestionGroupDomain> returnAllMultiGroup () {
+        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllBySingle(false);
+        return allByActive;
+
+    }
 
     @GetMapping("/questions/findAll")
     public List<QuestionsDomain> returnAllQuestions() {
@@ -184,14 +211,6 @@ public class QuestionsController {
 
     }
 
-//    @PostMapping("/questions/questionUpdate")
-//    public int updateQuestion (@RequestBody NewQuestionDto newQuestionDto ){
-//
-//
-//
-//
-//
-//    }
 
     @PostMapping("/questions/addQuestion")
     public ResponseEntity<Integer> addNewQuestion(@RequestParam(value = "question") String question,
@@ -225,68 +244,70 @@ public class QuestionsController {
 
     }
 
-    @PostMapping("/questions/updateQuestion")
-    public void updateQuestions (@RequestBody NewQuestionDto newQuestionDto) {
-
-        QuestionsDomain byNumber = questionsDomainRepository.findByNumber(newQuestionDto.getNumber());
-        byNumber.setNumber(byNumber.getNumber());
-        byNumber.setQuestion(newQuestionDto.getQuestion());
-        QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
-        byNumber.setQuestionHandler(questionGroupDomain);
-
-        questionsDomainRepository.save(byNumber);
-
-
-    }
 
 
 
-    @PostMapping("/questions/addQuestionBody")
-    public void addNewQuestionBody(@RequestBody NewQuestionDto newQuestionDto) {
-
-//        Optional<QuestionsDomain> questionDomain = Optional.ofNullable(questionsDomainRepository.findByNumber(newQuestionDto.getNumber()));
-//        if (questionDomain.isPresent()) {
-//            questionDomain.get().setQuestion(newQuestionDto.getQuestion());
-//            questionDomain.get().setNumber(newQuestionDto.getNumber());
+//    @PostMapping("/questions/addQuestionOrUpdate")
+//    public void addNewQuestionOrUpdate(@RequestBody NewQuestionDto newQuestionDto) {
 //
-//            Optional<QuestionGroupDomain> questionGroupDomain = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
-//            if (questionGroupDomain.isPresent()) {
-//                questionDomain.get().setQuestionHandler(questionGroupDomain.get());
-//            } else {
-//                QuestionGroupDomain group = new QuestionGroupDomain();
-//                QuestionGroupDomain groupDomain = questionGroupRepository.save(group);
-//                questionDomain.get().setQuestionHandler(groupDomain);
-//            }
-//            questionsDomainRepository.save(questionDomain.get());
 //
-//        } else
-//        {
-//            QuestionsDomain newQuestion = new QuestionsDomain();
-//            newQuestion.setNumber(newQuestionDto.getNumber());
-//            newQuestion.setQuestion(newQuestionDto.getQuestion());
-//            Optional<QuestionGroupDomain> questionGroupDomain = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
-//            if (questionGroupDomain.isPresent()) {
-//                questionDomain.get().setQuestionHandler(questionGroupDomain.get());
-//            } else {
-//                QuestionGroupDomain group = new QuestionGroupDomain();
-//                QuestionGroupDomain groupDomain = questionGroupRepository.save(group);
-//                questionDomain.get().setQuestionHandler(groupDomain);
+//
+//        Optional<QuestionGroupDomain> questionGroupNumber = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
+//        if (questionGroupNumber.isPresent()){
+//            Optional <QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(),questionGroupNumber.get()));
+//            if (question.isPresent() && question.get().getQuestionHandler().getIdQuestionGroup() == questionGroupNumber.get().getIdQuestionGroup()){
+//                question.get().setQuestion(newQuestionDto.getQuestion());
+//
+//
+//
+//                questionsDomainRepository.save(question.get());
+//
+//            }else {
+//                QuestionsDomain questionsDomain = new QuestionsDomain();
+//                questionsDomain.setNumber(newQuestionDto.getNumber());
+//                questionsDomain.setQuestion(newQuestionDto.getQuestion());
+//                questionsDomain.setQuestionHandler(questionGroupNumber.get());
+//                questionsDomainRepository.save(questionsDomain);
+//
+//
 //            }
-//            questionsDomainRepository.save(newQuestion);
+//
+//
+//        }else{
+//            QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+//            //questionGroupDomain.setGroupId(newQuestionDto.getQuestionHandler());
+//             questionGroupDomain.setActive(true);
+//            QuestionGroupDomain questionGroupID = questionGroupRepository.save(questionGroupDomain);
+//
+//
+//            QuestionsDomain questionsDomain = new QuestionsDomain();
+//
+//            questionsDomain.setQuestion(newQuestionDto.getQuestion());
+//            questionsDomain.setNumber(newQuestionDto.getNumber());
+//            questionsDomain.setQuestionHandler(questionGroupID);
+//
+//            questionsDomainRepository.save(questionsDomain);
+//
+//
+//
 //        }
+//
+//    }
+
+    @PostMapping("/questions/addQuestionOrUpdate")
+    public void addNewQuestionOrUpdate(@RequestBody NewQuestionDto newQuestionDto) throws GroupNotFound {
 
 
         Optional<QuestionGroupDomain> questionGroupNumber = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
-        if (questionGroupNumber.isPresent()){
-            Optional <QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(),questionGroupNumber.get()));
-            if (question.isPresent() && question.get().getQuestionHandler().equals(questionGroupNumber)){
+        if (questionGroupNumber.isPresent()) {
+            Optional<QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(), questionGroupNumber.get()));
+            if (question.isPresent() && question.get().getQuestionHandler().getIdQuestionGroup() == questionGroupNumber.get().getIdQuestionGroup()) {
                 question.get().setQuestion(newQuestionDto.getQuestion());
-
 
 
                 questionsDomainRepository.save(question.get());
 
-            }else {
+            } else {
                 QuestionsDomain questionsDomain = new QuestionsDomain();
                 questionsDomain.setNumber(newQuestionDto.getNumber());
                 questionsDomain.setQuestion(newQuestionDto.getQuestion());
@@ -295,28 +316,39 @@ public class QuestionsController {
 
 
             }
-
-
-        }else{
-            QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
-            //questionGroupDomain.setGroupId(newQuestionDto.getQuestionHandler());
-             questionGroupDomain.setActive(true);
-            QuestionGroupDomain questionGroupID = questionGroupRepository.save(questionGroupDomain);
-
-
-            QuestionsDomain questionsDomain = new QuestionsDomain();
-
-            questionsDomain.setQuestion(newQuestionDto.getQuestion());
-            questionsDomain.setNumber(newQuestionDto.getNumber());
-            questionsDomain.setQuestionHandler(questionGroupID);
-
-            questionsDomainRepository.save(questionsDomain);
-
+        } else {
+            throw new GroupNotFound();
 
 
         }
+    }
+
+    @PostMapping("questionGroup/addQuestionGroup")
+    public void addNewQuestionGroup (@RequestBody NewQuestionGroupDto newQuestionGroupDto){
+        Optional<QuestionGroupDomain> groupNumber = questionGroupRepository.findByName(newQuestionGroupDto.getName());
+        if (groupNumber.isPresent()){
+            groupNumber.get().setActive(newQuestionGroupDto.isActive());
+            groupNumber.get().setSingle(newQuestionGroupDto.isSingle());
+
+
+            questionGroupRepository.save(groupNumber.get());
+
+        }else {
+            QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+            questionGroupDomain.setName(newQuestionGroupDto.getName());
+            questionGroupDomain.setSingle(newQuestionGroupDto.isSingle());
+            questionGroupDomain.setActive(newQuestionGroupDto.isSingle());
+
+            questionGroupRepository.save(questionGroupDomain);
+
+        }
+
 
     }
+
+
+
+
 
 
     @GetMapping("/question/randomQuestion")

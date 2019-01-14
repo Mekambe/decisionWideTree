@@ -12,4 +12,5 @@ public interface TreeLogicService {
     public QuestionDto getQuestionFromTree(int firstQuestion);
     public List<QuestionsDomain> randomTreeQuestion ();
 
+
 }

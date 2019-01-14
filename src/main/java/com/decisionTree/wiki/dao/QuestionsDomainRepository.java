@@ -5,10 +5,13 @@ import com.decisionTree.wiki.domain.QuestionsDomain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain, Integer> {
 
     QuestionsDomain findByNumber (int number);
     QuestionsDomain findByNumberAndQuestionHandler(int number, QuestionGroupDomain questionHandler);
+
 
 }

@@ -23,7 +23,18 @@ public class QuestionGroupDomain {
 
     private boolean active;
 
+    private boolean single;
 
+    @Column(unique = true)
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getIdQuestionGroup() {
         return idQuestionGroup;
@@ -49,5 +60,11 @@ public class QuestionGroupDomain {
         this.active = active;
     }
 
+    public boolean isSingle() {
+        return single;
+    }
 
+    public void setSingle(boolean single) {
+        this.single = single;
+    }
 }
