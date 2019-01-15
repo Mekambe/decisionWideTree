@@ -352,9 +352,9 @@ public class QuestionsController {
 
 
     @GetMapping("/question/randomQuestion")
-    public List<QuestionsDomain> returnRandomQuestion (){
+    public List<QuestionsDomain> returnRandomQuestion (@RequestParam(value="single") boolean singleOrMulti){
 
-        List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion();
+        List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion(singleOrMulti);
 
         return questionsDomains;
     }

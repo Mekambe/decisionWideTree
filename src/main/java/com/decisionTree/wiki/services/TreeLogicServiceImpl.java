@@ -49,26 +49,31 @@ public class TreeLogicServiceImpl implements TreeLogicService {
     }
 
 
+    public List<QuestionsDomain> randomTreeQuestion(boolean singleOrMulti) {
 
-    public List<QuestionsDomain> randomTreeQuestion (){
 
-        List <QuestionGroupDomain> allByQuestionHandlerIsTrue = questionGroupRepository.findAllByActive(true);
+
+        List<QuestionGroupDomain> allByQuestionHandlerIsActoveAndSingle = questionGroupRepository.findAllBySingleAndActive(true,true);
+        List<QuestionGroupDomain> allByQuestionHandlerIsInactiveandMulti = questionGroupRepository.findAllBySingle(false);
+
         //takes out all active groups from GroupDomain
+        if (singleOrMulti == true) {
+
+            QuestionGroupDomain randomQuestionGroup = allByQuestionHandlerIsActoveAndSingle.get(new Random().nextInt(allByQuestionHandlerIsActoveAndSingle.size()));
+            //random object
+            List<QuestionsDomain> groupId = randomQuestionGroup.getGroupId();
+
+            return groupId;
+
+        } else {
+            QuestionGroupDomain randomQuestionGroup2 = allByQuestionHandlerIsInactiveandMulti.get(new Random().nextInt(allByQuestionHandlerIsInactiveandMulti.size()));
+            //random object
+            List<QuestionsDomain> groupId2 = randomQuestionGroup2.getGroupId();
 
 
-
-        QuestionGroupDomain randomQuestionGroup = allByQuestionHandlerIsTrue.get(new Random().nextInt(allByQuestionHandlerIsTrue.size()));
-//random object
-
-        List<QuestionsDomain> groupId = randomQuestionGroup.getGroupId();
+            return groupId2;
+        }
 
 
-
-
-
-        return groupId;
     }
-
-
-
 }

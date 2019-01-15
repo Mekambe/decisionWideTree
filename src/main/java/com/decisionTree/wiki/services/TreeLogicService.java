@@ -10,7 +10,7 @@ import java.util.List;
 public interface TreeLogicService {
 
     public QuestionDto getQuestionFromTree(int firstQuestion);
-    public List<QuestionsDomain> randomTreeQuestion ();
+    public List<QuestionsDomain> randomTreeQuestion (boolean singleOrMulti);
 
 
 }
