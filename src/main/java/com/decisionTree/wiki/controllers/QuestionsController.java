@@ -1,13 +1,8 @@
 package com.decisionTree.wiki.controllers;
 
-import com.decisionTree.wiki.dao.QuestionGroupRepository;
-import com.decisionTree.wiki.dao.QuestionsDomainRepository;
-import com.decisionTree.wiki.dao.TreeRepository;
-import com.decisionTree.wiki.dao.UsersDomainRepository;
-import com.decisionTree.wiki.domain.QuestionGroupDomain;
-import com.decisionTree.wiki.domain.QuestionsDomain;
-import com.decisionTree.wiki.domain.TreeDomain;
-import com.decisionTree.wiki.domain.UsersDomain;
+import com.decisionTree.wiki.dao.*;
+import com.decisionTree.wiki.domain.*;
+import com.decisionTree.wiki.dto.ImageAndLinkDto;
 import com.decisionTree.wiki.dto.NewQuestionDto;
 import com.decisionTree.wiki.dto.NewQuestionGroupDto;
 import com.decisionTree.wiki.dto.QuestionDto;
@@ -31,16 +26,19 @@ public class QuestionsController {
     private UsersDomainRepository usersDomainRepository;
     private QuestionGroupRepository questionGroupRepository;
     private TreeRepository treeRepository;
-
+    private AnwsersImageAndLinksRepository anwsersImageAndLinksRepository;
 
     @Autowired
-    public QuestionsController(QuestionsDomainRepository questionsDomainRepository, TreeLogicService treeLogicService, UsersDomainRepository usersDomainRepository, QuestionGroupRepository questionGroupRepository, TreeRepository treeRepository) {
+    public QuestionsController(QuestionsDomainRepository questionsDomainRepository, TreeLogicService treeLogicService, UsersDomainRepository usersDomainRepository, QuestionGroupRepository questionGroupRepository, TreeRepository treeRepository, AnwsersImageAndLinksRepository anwsersImageAndLinksRepository) {
         this.questionsDomainRepository = questionsDomainRepository;
         this.treeLogicService = treeLogicService;
         this.usersDomainRepository = usersDomainRepository;
         this.questionGroupRepository = questionGroupRepository;
         this.treeRepository = treeRepository;
+        this.anwsersImageAndLinksRepository = anwsersImageAndLinksRepository;
     }
+
+
 
 
     @GetMapping("/questions/findAllActive")
@@ -86,13 +84,7 @@ public class QuestionsController {
 
 
 
-    @GetMapping("/questions")
-    public QuestionDto questionHandler(@PathParam("id") int id) {
-        QuestionDto questionFromTree = treeLogicService.getQuestionFromTree(id);
 
-        return questionFromTree;
-
-    }
 
     @GetMapping("/User/userId")
     public Optional<UsersDomain> findUserById(@PathParam("uID") int uID) throws IdNotFound {
@@ -245,55 +237,6 @@ public class QuestionsController {
     }
 
 
-
-
-//    @PostMapping("/questions/addQuestionOrUpdate")
-//    public void addNewQuestionOrUpdate(@RequestBody NewQuestionDto newQuestionDto) {
-//
-//
-//
-//        Optional<QuestionGroupDomain> questionGroupNumber = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
-//        if (questionGroupNumber.isPresent()){
-//            Optional <QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(),questionGroupNumber.get()));
-//            if (question.isPresent() && question.get().getQuestionHandler().getIdQuestionGroup() == questionGroupNumber.get().getIdQuestionGroup()){
-//                question.get().setQuestion(newQuestionDto.getQuestion());
-//
-//
-//
-//                questionsDomainRepository.save(question.get());
-//
-//            }else {
-//                QuestionsDomain questionsDomain = new QuestionsDomain();
-//                questionsDomain.setNumber(newQuestionDto.getNumber());
-//                questionsDomain.setQuestion(newQuestionDto.getQuestion());
-//                questionsDomain.setQuestionHandler(questionGroupNumber.get());
-//                questionsDomainRepository.save(questionsDomain);
-//
-//
-//            }
-//
-//
-//        }else{
-//            QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
-//            //questionGroupDomain.setGroupId(newQuestionDto.getQuestionHandler());
-//             questionGroupDomain.setActive(true);
-//            QuestionGroupDomain questionGroupID = questionGroupRepository.save(questionGroupDomain);
-//
-//
-//            QuestionsDomain questionsDomain = new QuestionsDomain();
-//
-//            questionsDomain.setQuestion(newQuestionDto.getQuestion());
-//            questionsDomain.setNumber(newQuestionDto.getNumber());
-//            questionsDomain.setQuestionHandler(questionGroupID);
-//
-//            questionsDomainRepository.save(questionsDomain);
-//
-//
-//
-//        }
-//
-//    }
-
     @PostMapping("/questions/addQuestionOrUpdate")
     public void addNewQuestionOrUpdate(@RequestBody NewQuestionDto newQuestionDto) throws GroupNotFound {
 
@@ -348,17 +291,86 @@ public class QuestionsController {
 
 
 
-
-
-
-    @GetMapping("/question/randomQuestion")
-    public List<QuestionsDomain> returnRandomQuestion (@RequestParam(value="single") boolean singleOrMulti){
-
-        List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion(singleOrMulti);
-
-        return questionsDomains;
+    @GetMapping ("firstQuestion")
+    public String returnFirstQuestion (){
+        return "Do we go Single?";
+    }
+    @PostMapping("firstQuestion/firstQuestionResponce")
+    public boolean anwserfortheFirstQuestion (@RequestParam(value="firstQuestion") String firstQuestion){
+        if (firstQuestion.equals("Yes")){
+            return true;
+        } else if(firstQuestion.equals("No")) {
+            return false;
+        }
+        return false;
     }
 
+    @GetMapping("/firstQuestion/randomQuestion")
+    public QuestionDto returnRandomQuestion (@RequestParam(value="single") boolean singleOrMulti){
+
+        List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion(singleOrMulti);
+        QuestionDto questionDto = new QuestionDto();
+      // treeRepository.findByRoot(questionsDom)
+
+      QuestionsDomain firstQuestion = null;
+        for (int i = 0; i < questionsDomains.size(); i++) {
+
+            if(questionsDomains.get(i).getNumber()==1)
+                firstQuestion=questionsDomains.get(i);
+
+        }
+      Optional <TreeDomain> byRoot = Optional.ofNullable(treeRepository.findByRoot(firstQuestion.getNumber()));
+        questionDto.setLeft(byRoot.get().getLeft());
+        questionDto.setRight(byRoot.get().getRight());
+        questionDto.setRoot(byRoot.get().getRoot());
+        questionDto.setGroupId(firstQuestion.getQuestionHandler().getIdQuestionGroup());
+        questionDto.setQuestion(firstQuestion.getQuestion());
 
 
-}
+        return questionDto;
+    }
+
+    @GetMapping ("/firstQuestion/nextRandomQuestion")
+    public QuestionDto returnNextRandomQuestion (@RequestParam(value="domainNumber") int questionDomainNumber, @RequestParam(value="questionGroupId") int questionGroupId) throws IdNotFound {
+
+        Optional <QuestionsDomain> byNumberAndQuestionHandler_idQuestionGroup = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionDomainNumber, questionGroupId));
+
+        Optional <TreeDomain> treeRootNumber = Optional.ofNullable(treeRepository.findByRoot(questionDomainNumber));
+
+        if (!byNumberAndQuestionHandler_idQuestionGroup.isPresent()&&treeRootNumber.isPresent()){throw new IdNotFound();}
+        QuestionDto questionDto = new QuestionDto();
+
+        questionDto.setQuestion(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestion());
+        questionDto.setGroupId(byNumberAndQuestionHandler_idQuestionGroup.get().getIdQuestions());
+        questionDto.setRoot(treeRootNumber.get().getRoot());
+        questionDto.setRight(treeRootNumber.get().getRight());
+        questionDto.setLeft(treeRootNumber.get().getLeft());
+
+        return questionDto;
+
+
+    }
+
+    @PostMapping ("imageLink/create")
+    public void createImageAndLink (@RequestBody ImageAndLinkDto imageAndLinkDto){
+        AnwsersImageAndLinks anwsersImageAndLinks = new AnwsersImageAndLinks();
+        anwsersImageAndLinks.setImage(imageAndLinkDto.getImage());
+        anwsersImageAndLinks.setLinks(imageAndLinkDto.getLink());
+
+        AnwsersImageAndLinks save = anwsersImageAndLinksRepository.save(anwsersImageAndLinks);
+
+    }
+
+    @GetMapping("imageLink/find")
+    public List<AnwsersImageAndLinks> findById (@RequestParam (value = "id") int idImage){
+        List<AnwsersImageAndLinks> byIdImageLinks = anwsersImageAndLinksRepository.findByIdImageLinks(idImage);
+
+
+        return byIdImageLinks;
+    }
+
+    //TODO
+     //metoda ktora czyta obrazki z dysku
+    // zainsaluj microsoftr visual studio code
+
+    }

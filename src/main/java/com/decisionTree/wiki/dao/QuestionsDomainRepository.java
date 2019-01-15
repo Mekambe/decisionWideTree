@@ -12,6 +12,7 @@ public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain
 
     QuestionsDomain findByNumber (int number);
     QuestionsDomain findByNumberAndQuestionHandler(int number, QuestionGroupDomain questionHandler);
-
+    QuestionsDomain findByNumberAndQuestionHandler_IdQuestionGroup (int number, int idNumber);
+    QuestionsDomain findByQuestionHandler (int number);
 
 }

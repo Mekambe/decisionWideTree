@@ -30,23 +30,25 @@ public class TreeLogicServiceImpl implements TreeLogicService {
     }
 
 
-    public QuestionDto getQuestionFromTree(int firstQuestion) {
-
-        TreeDomain treeDomainParsed = treeRepository.findByRoot(firstQuestion);
-        QuestionsDomain questionDomainParsed = questionsDomainRepository.findByNumber(firstQuestion);
-
-
-        QuestionDto questionDtoParsed = new QuestionDto();
-
-        questionDtoParsed.setQuestion(questionDomainParsed.getQuestion());
-        questionDtoParsed.setLeft(treeDomainParsed.getLeft());
-        questionDtoParsed.setRight(treeDomainParsed.getRight());
-        questionDtoParsed.setRoot(treeDomainParsed.getRoot());
-
-        return (questionDtoParsed);
-
-
-    }
+//    public QuestionDto getQuestionFromTree(List<QuestionsDomain> radnomQuestionList) {
+//
+//
+//
+//        QuestionsDomain questionDomainParsed = questionsDomainRepository.findByNumber(radnomQuestionList.size());
+//        TreeDomain treeDomainParsed = treeRepository.findByRoot(questionDomainParsed.getNumber());
+//
+//        QuestionDto questionDtoParsed = new QuestionDto();
+//
+//
+//        questionDtoParsed.setQuestion(questionDomainParsed.getQuestion());
+//        questionDtoParsed.setLeft(treeDomainParsed.getLeft());
+//        questionDtoParsed.setRight(treeDomainParsed.getRight());
+//        questionDtoParsed.setRoot(treeDomainParsed.getRoot());
+//
+//        return (questionDtoParsed);
+//
+//
+//    }
 
 
     public List<QuestionsDomain> randomTreeQuestion(boolean singleOrMulti) {
@@ -54,7 +56,7 @@ public class TreeLogicServiceImpl implements TreeLogicService {
 
 
         List<QuestionGroupDomain> allByQuestionHandlerIsActoveAndSingle = questionGroupRepository.findAllBySingleAndActive(true,true);
-        List<QuestionGroupDomain> allByQuestionHandlerIsInactiveandMulti = questionGroupRepository.findAllBySingle(false);
+        List<QuestionGroupDomain> allByQuestionHandlerIsInactiveandMulti = questionGroupRepository.findAllBySingleAndActive(false,true);
 
         //takes out all active groups from GroupDomain
         if (singleOrMulti == true) {

@@ -7,6 +7,15 @@ int root;
 int left;
 int right;
 String question;
+int groupId;
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
 
     public int getRoot() {
         return root;
