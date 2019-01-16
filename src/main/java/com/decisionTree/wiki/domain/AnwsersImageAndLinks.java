@@ -3,10 +3,7 @@ package com.decisionTree.wiki.domain;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.sql.rowset.serial.SerialBlob;
 import java.awt.*;
 
@@ -20,7 +17,18 @@ public class AnwsersImageAndLinks {
 
     String links;
 
+    @OneToOne (cascade=CascadeType.ALL)
+    QuestionsDomain questionsDomain;
+
     String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public int getIdImageLinks() {
         return idImageLinks;
@@ -38,11 +46,11 @@ public class AnwsersImageAndLinks {
         this.links = links;
     }
 
-    public String getImage() {
-        return image;
+    public QuestionsDomain getQuestionsDomain() {
+        return questionsDomain;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setQuestionsDomain(QuestionsDomain questionsDomain) {
+        this.questionsDomain = questionsDomain;
     }
 }

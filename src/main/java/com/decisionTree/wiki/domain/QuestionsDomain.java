@@ -23,6 +23,11 @@ public class QuestionsDomain {
             @JoinColumn (name = "idQuestionGroup")
    QuestionGroupDomain questionHandler;
 
+
+
+    @OneToOne(mappedBy = "questionsDomain")
+    private AnwsersImageAndLinks image;
+
     private int number;
 
     private String question;
@@ -41,6 +46,14 @@ public class QuestionsDomain {
 
     public void setQuestionHandler(QuestionGroupDomain questionHandler) {
         this.questionHandler = questionHandler;
+    }
+
+    public AnwsersImageAndLinks getImage() {
+        return image;
+    }
+
+    public void setImage(AnwsersImageAndLinks image) {
+        this.image = image;
     }
 
     public int getNumber() {

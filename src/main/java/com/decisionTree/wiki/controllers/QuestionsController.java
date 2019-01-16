@@ -351,15 +351,6 @@ public class QuestionsController {
 
     }
 
-    @PostMapping ("imageLink/create")
-    public void createImageAndLink (@RequestBody ImageAndLinkDto imageAndLinkDto){
-        AnwsersImageAndLinks anwsersImageAndLinks = new AnwsersImageAndLinks();
-        anwsersImageAndLinks.setImage(imageAndLinkDto.getImage());
-        anwsersImageAndLinks.setLinks(imageAndLinkDto.getLink());
-
-        AnwsersImageAndLinks save = anwsersImageAndLinksRepository.save(anwsersImageAndLinks);
-
-    }
 
     @GetMapping("imageLink/find")
     public List<AnwsersImageAndLinks> findById (@RequestParam (value = "id") int idImage){

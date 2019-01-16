@@ -8,5 +8,6 @@ import java.util.List;
 public interface AnwsersImageAndLinksRepository extends JpaRepository <AnwsersImageAndLinks, Integer> {
 
     List <AnwsersImageAndLinks> findByIdImageLinks (int idImage);
+    //List<AnwsersImageAndLinks> createImage (List<image>)
 
 }

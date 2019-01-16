@@ -1,5 +1,12 @@
 package com.decisionTree.wiki.controllers;
 
+import com.decisionTree.wiki.dao.AnwsersImageAndLinksRepository;
+import com.decisionTree.wiki.dao.QuestionGroupRepository;
+import com.decisionTree.wiki.dao.QuestionsDomainRepository;
+import com.decisionTree.wiki.domain.AnwsersImageAndLinks;
+import com.decisionTree.wiki.domain.QuestionGroupDomain;
+import com.decisionTree.wiki.domain.QuestionsDomain;
+import com.decisionTree.wiki.dto.ImageAndLinkDto;
 import com.decisionTree.wiki.payload.UploadFileResponse;
 import com.decisionTree.wiki.services.FileStorageService;
 import org.slf4j.Logger;
@@ -23,11 +30,23 @@ public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    @Autowired
-    private FileStorageService fileStorageService;
 
-    @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
+    private FileStorageService fileStorageService;
+    private QuestionsDomainRepository questionsDomainRepository;
+    private QuestionGroupRepository questionGroupRepository;
+    private AnwsersImageAndLinksRepository anwsersImageAndLinksRepository;
+
+
+
+    @Autowired
+    public FileController(FileStorageService fileStorageService, QuestionsDomainRepository questionsDomainRepository, QuestionGroupRepository questionGroupRepository, AnwsersImageAndLinksRepository anwsersImageAndLinksRepository) {
+        this.questionsDomainRepository = questionsDomainRepository;
+        this.questionGroupRepository = questionGroupRepository;
+        this.anwsersImageAndLinksRepository = anwsersImageAndLinksRepository;
+        this.fileStorageService = fileStorageService;
+    }
+
+    private UploadFileResponse uploadFile(MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -40,11 +59,22 @@ public class FileController {
     }
 
     @PostMapping("/uploadMultipleFiles")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-        return Arrays.asList(files)
-                .stream()
-                .map(file -> uploadFile(file))
+    public void uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
+                                                        @RequestParam("id") int id,
+                                                        @RequestParam("questionId") int questionId,
+                                                        @RequestParam("link") String link) {
+        List<UploadFileResponse> collect = Arrays.stream(files)
+                .map(this::uploadFile)
                 .collect(Collectors.toList());
+        QuestionsDomain byNumberAndQuestion = questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionId, id);
+
+        AnwsersImageAndLinks anwsersImageAndLinks =  new AnwsersImageAndLinks();
+        anwsersImageAndLinks.setLinks(link);
+        anwsersImageAndLinks.setImage(collect.get(0).getFileDownloadUri());
+        anwsersImageAndLinks.setQuestionsDomain(byNumberAndQuestion);
+        anwsersImageAndLinksRepository.save(anwsersImageAndLinks);
+
+
     }
 
     @GetMapping("/downloadFile/{fileName:.+}")
