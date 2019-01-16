@@ -372,6 +372,6 @@ public class QuestionsController {
     //TODO
      //metoda ktora czyta obrazki z dysku
     // zainsaluj microsoftr visual studio code
-    Test
+
 
     }
