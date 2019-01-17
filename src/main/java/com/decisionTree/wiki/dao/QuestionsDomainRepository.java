@@ -14,4 +14,5 @@ public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain
     QuestionsDomain findByNumberAndQuestionHandler(int number, QuestionGroupDomain questionHandler);
 
 
+
 }

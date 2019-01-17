@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class UsersDomain {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idUser;
 
     String name;

@@ -44,27 +44,29 @@ public class QuestionsController {
 
 
     @GetMapping("/questions/findAllActive")
-    public List<QuestionGroupDomain> returnAllActiveQuestions () {
-        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllByActive(true);
+    public List<QuestionGroupDomain> returnAllActiveQuestions() {
+        List<QuestionGroupDomain> allByActive = questionGroupRepository.findAllByActive(true);
         return allByActive;
 
     }
 
     @GetMapping("/questions/findAllInactive")
-    public List<QuestionGroupDomain> returnAllInactiveQuestions () {
-        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllByActive(false);
+    public List<QuestionGroupDomain> returnAllInactiveQuestions() {
+        List<QuestionGroupDomain> allByActive = questionGroupRepository.findAllByActive(false);
         return allByActive;
 
     }
+
     @GetMapping("/questions/findAllInSingleGroup")
-    public List<QuestionGroupDomain> returnAllSingleGroup () {
-        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllBySingle(true);
+    public List<QuestionGroupDomain> returnAllSingleGroup() {
+        List<QuestionGroupDomain> allByActive = questionGroupRepository.findAllBySingle(true);
         return allByActive;
 
     }
+
     @GetMapping("/questions/findAllInMultiGroup")
-    public List<QuestionGroupDomain> returnAllMultiGroup () {
-        List <QuestionGroupDomain> allByActive = questionGroupRepository.findAllBySingle(false);
+    public List<QuestionGroupDomain> returnAllMultiGroup() {
+        List<QuestionGroupDomain> allByActive = questionGroupRepository.findAllBySingle(false);
         return allByActive;
 
     }
@@ -75,24 +77,18 @@ public class QuestionsController {
     }
 
     @GetMapping("/questionQroup/findAllQQ")
-    public List<QuestionGroupDomain> returnAllQuestionGroup(){
+    public List<QuestionGroupDomain> returnAllQuestionGroup() {
         return questionGroupRepository.findAll();
 
     }
+
     @GetMapping("/User/findAllUsers")
-    public List<UsersDomain> findAllUsers(){
-       return usersDomainRepository.findAll();
+    public List<UsersDomain> findAllUsers() {
+        return usersDomainRepository.findAll();
     }
 
 
 
-    @GetMapping("/questions")
-    public QuestionDto questionHandler(@PathParam("id") int id) {
-        QuestionDto questionFromTree = treeLogicService.getQuestionFromTree(id);
-
-        return questionFromTree;
-
-    }
 
     @GetMapping("/User/userId")
     public Optional<UsersDomain> findUserById(@PathParam("uID") int uID) throws IdNotFound {
@@ -151,26 +147,11 @@ public class QuestionsController {
     @DeleteMapping("/questions/deleteQuestion")
     public void deleteQuestion(@PathParam("qID") int qID) throws IdNotFound {
         Optional<QuestionsDomain> deleteQuestionByID = questionsDomainRepository.findById(qID);
-//        if (!deleteQuestionByID.isPresent()) {
-//            throw new IdNotFound();
-//        }
-        notDelete(deleteQuestionByID);
 
-        if (deleteQuestionByID.isPresent()){
-
-            questionsDomainRepository.delete(deleteQuestionByID.get());
-        }
-
-
-
-    }
-
-    public void notDelete (Optional w) throws IdNotFound{
-
-
-
-        if (!w.isPresent()){
+        if (!deleteQuestionByID.isPresent()) {
             throw new IdNotFound();
+        } else {
+            questionsDomainRepository.delete(deleteQuestionByID.get());
         }
 
     }
@@ -197,17 +178,19 @@ public class QuestionsController {
     }
 
 
-    @PostMapping ("/User/userUpdate")
-    public int updateUser (@RequestBody UsersDomain usersDomain){
+    @PostMapping("/User/userUpdate")
+    public int updateUser(@RequestBody UsersDomain usersDomain) {
 
 
         UsersDomain byName = usersDomainRepository.findByName(usersDomain.getName());
         if (!(byName == null)) {
             usersDomain.setName(usersDomain.getName());
             return 2;
-        }else{usersDomainRepository.save(usersDomain);}
+        } else {
+            usersDomainRepository.save(usersDomain);
+        }
 
-     return 1;
+        return 1;
 
     }
 
@@ -243,8 +226,6 @@ public class QuestionsController {
 
 
     }
-
-
 
 
 //    @PostMapping("/questions/addQuestionOrUpdate")
@@ -324,16 +305,16 @@ public class QuestionsController {
     }
 
     @PostMapping("questionGroup/addQuestionGroup")
-    public void addNewQuestionGroup (@RequestBody NewQuestionGroupDto newQuestionGroupDto){
+    public void addNewQuestionGroup(@RequestBody NewQuestionGroupDto newQuestionGroupDto) {
         Optional<QuestionGroupDomain> groupNumber = questionGroupRepository.findByName(newQuestionGroupDto.getName());
-        if (groupNumber.isPresent()){
+        if (groupNumber.isPresent()) {
             groupNumber.get().setActive(newQuestionGroupDto.isActive());
             groupNumber.get().setSingle(newQuestionGroupDto.isSingle());
 
 
             questionGroupRepository.save(groupNumber.get());
 
-        }else {
+        } else {
             QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
             questionGroupDomain.setName(newQuestionGroupDto.getName());
             questionGroupDomain.setSingle(newQuestionGroupDto.isSingle());
@@ -347,18 +328,21 @@ public class QuestionsController {
     }
 
 
-
-
-
-
     @GetMapping("/question/randomQuestion")
-    public List<QuestionsDomain> returnRandomQuestion (@RequestParam(value="single") boolean singleOrMulti){
+    public List<QuestionsDomain> returnRandomQuestion(@RequestParam(value = "single") boolean singleOrMulti) {
 
         List<QuestionsDomain> questionsDomains = treeLogicService.randomTreeQuestion(singleOrMulti);
 
         return questionsDomains;
     }
 
+    @GetMapping("/getQuestionDecisionTree")
+    public QuestionDto questionHandler(@PathParam("id") int id) {
+        QuestionDto questionFromTree = treeLogicService.getQuestionFromTree(id);
+
+        return questionFromTree;
+
+    }
 
 
 }

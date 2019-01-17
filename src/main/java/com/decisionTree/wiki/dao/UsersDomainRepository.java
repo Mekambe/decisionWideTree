@@ -1,5 +1,6 @@
 package com.decisionTree.wiki.dao;
 
+import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.domain.UsersDomain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,5 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface UsersDomainRepository extends JpaRepository<UsersDomain, Integer> {
 
     UsersDomain findByName (String name);
+
 
 }
