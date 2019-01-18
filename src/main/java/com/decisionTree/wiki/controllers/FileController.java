@@ -7,6 +7,7 @@ import com.decisionTree.wiki.domain.AnwsersImageAndLinks;
 import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.dto.ImageAndLinkDto;
+import com.decisionTree.wiki.exceptions.IdNotFound;
 import com.decisionTree.wiki.payload.UploadFileResponse;
 import com.decisionTree.wiki.services.FileStorageService;
 import org.slf4j.Logger;
@@ -20,9 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,8 +57,11 @@ public class FileController {
                 .path(fileName)
                 .toUriString();
 
+        String pathUri = ""; //adres zapisanego obrazak na dysku
+
         return new UploadFileResponse(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
+// dodac do konstruktora: pathUri);
     }
 
     @PostMapping("/uploadMultipleFiles")
@@ -68,19 +74,21 @@ public class FileController {
                 .collect(Collectors.toList());
         QuestionsDomain byNumberAndQuestion = questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionId, id);
 
+
         AnwsersImageAndLinks anwsersImageAndLinks =  new AnwsersImageAndLinks();
         anwsersImageAndLinks.setLinks(link);
-        anwsersImageAndLinks.setImage(collect.get(0).getFileDownloadUri());
+        anwsersImageAndLinks.setImage(collect.get(0).getFileDownloadUri());  //getPathUri
         anwsersImageAndLinks.setQuestionsDomain(byNumberAndQuestion);
         anwsersImageAndLinksRepository.save(anwsersImageAndLinks);
 
 
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    @GetMapping("/downloadFile/{imageID}")
+
+    public ResponseEntity<Resource> downloadFile(@PathVariable int imageID, HttpServletRequest request) {
         // Load file as Resource
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+        Resource resource = fileStorageService.loadFileAsResource(imageID);
 
         // Try to determine file's content type
         String contentType = null;
@@ -100,4 +108,15 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
+
+    @DeleteMapping("/downloadFile/delete/{imageID}")
+    public void deleteImage (@PathParam("id") int id) throws IdNotFound {
+       Optional<List<AnwsersImageAndLinks>> byImage = Optional.ofNullable(anwsersImageAndLinksRepository.findByIdImageLinks(id));
+        if (!byImage.isPresent()) {
+            throw new IdNotFound();
+        }
+//        byImage.ifPresent(p -> anwsersImageAndLinksRepository.delete(p.get()));
+    }
+
+
 }

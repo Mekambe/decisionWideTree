@@ -1,5 +1,8 @@
 package com.decisionTree.wiki.services;
 
+import com.decisionTree.wiki.dao.AnwsersImageAndLinksRepository;
+import com.decisionTree.wiki.dao.QuestionsDomainRepository;
+import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.exceptions.FileStorageException;
 import com.decisionTree.wiki.exceptions.MyFileNotFoundException;
 import com.decisionTree.wiki.property.FileStorageProperties;
@@ -21,10 +24,18 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
-    FileStorageProperties fileStorageProperties;
+    AnwsersImageAndLinksRepository anwsersImageAndLinksRepository;
 
-    public FileStorageService(Path fileStorageLocation) {
+QuestionsDomainRepository questionsDomainRepository;
+    FileStorageProperties fileStorageProperties;
+    QuestionsDomain questionsDomain;
+
+    public FileStorageService(Path fileStorageLocation, AnwsersImageAndLinksRepository anwsersImageAndLinksRepository, QuestionsDomainRepository questionsDomainRepository, FileStorageProperties fileStorageProperties, QuestionsDomain questionsDomain) {
         this.fileStorageLocation = fileStorageLocation;
+        this.anwsersImageAndLinksRepository = anwsersImageAndLinksRepository;
+        this.questionsDomainRepository = questionsDomainRepository;
+        this.fileStorageProperties = fileStorageProperties;
+        this.questionsDomain = questionsDomain;
     }
 
     @Autowired
@@ -59,17 +70,17 @@ public class FileStorageService {
         }
     }
 
-    public Resource loadFileAsResource(String fileName) {
+    public Resource loadFileAsResource(int fileNumber) {
         try {
-            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            Path filePath = Paths.get(questionsDomainRepository.findByIdQuestions(fileNumber).getImage().getImage());
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()) {
                 return resource;
             } else {
-                throw new MyFileNotFoundException("File not found " + fileName);
+                throw new MyFileNotFoundException("File not found " + fileNumber);
             }
         } catch (MalformedURLException ex) {
-            throw new MyFileNotFoundException("File not found " + fileName, ex);
+            throw new MyFileNotFoundException("File not found " + fileNumber, ex);
         }
     }
 

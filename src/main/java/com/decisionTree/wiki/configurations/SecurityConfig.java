@@ -18,19 +18,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER")
+                .withUser("user").password("{noop}password").roles("USER")
                 .and()
-                .withUser("admin").password("password").roles("USER", "ADMIN");
+                .withUser("admin").password("{noop}password").roles("USER", "ADMIN");
     }
 
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/home").access("hasRole('USER')")
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .and()
-                // some more method calls
-                .formLogin();
+                //.antMatchers("/", "/home").access("hasRole('USER')")
+               // .antMatchers("/**").hasRole("ADMIN")
+                .antMatchers("/h2-console/*").permitAll();//authorizeRequests();
+                //.antMatchers("/h2-console").permitAll();
+//               http.authorizeRequests()
+//                .antMatchers("/h2-console").access("hasRole('USER')")
+//                       .and().httpBasic();
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
+
+
+
+
 }
 
 
