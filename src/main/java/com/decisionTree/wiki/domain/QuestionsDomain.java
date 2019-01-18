@@ -25,7 +25,7 @@ public class QuestionsDomain {
 
 
 
-    @OneToOne(mappedBy = "questionsDomain")
+    @OneToOne
     private AnwsersImageAndLinks image;
 
     private int number;

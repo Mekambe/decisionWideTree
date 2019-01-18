@@ -17,7 +17,7 @@ public class AnwsersImageAndLinks {
 
     String links;
 
-    @OneToOne (cascade=CascadeType.ALL)
+    @OneToOne(mappedBy = "image")
     QuestionsDomain questionsDomain;
 
     String image;

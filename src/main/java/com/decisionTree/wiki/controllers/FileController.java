@@ -72,14 +72,16 @@ public class FileController {
         List<UploadFileResponse> collect = Arrays.stream(files)
                 .map(this::uploadFile)
                 .collect(Collectors.toList());
-        QuestionsDomain byNumberAndQuestion = questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionId, id);
+       QuestionsDomain byNumberAndQuestion = (questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionId, id));
 
 
         AnwsersImageAndLinks anwsersImageAndLinks =  new AnwsersImageAndLinks();
         anwsersImageAndLinks.setLinks(link);
         anwsersImageAndLinks.setImage(collect.get(0).getFileDownloadUri());  //getPathUri
         anwsersImageAndLinks.setQuestionsDomain(byNumberAndQuestion);
-        anwsersImageAndLinksRepository.save(anwsersImageAndLinks);
+
+        byNumberAndQuestion.setImage(anwsersImageAndLinksRepository.save(anwsersImageAndLinks));
+        questionsDomainRepository.save(byNumberAndQuestion);
 
 
     }
@@ -110,13 +112,18 @@ public class FileController {
     }
 
     @DeleteMapping("/downloadFile/delete/{imageID}")
-    public void deleteImage (@PathParam("id") int id) throws IdNotFound {
-       Optional<List<AnwsersImageAndLinks>> byImage = Optional.ofNullable(anwsersImageAndLinksRepository.findByIdImageLinks(id));
-        if (!byImage.isPresent()) {
-            throw new IdNotFound();
+    public void deleteImage (@PathVariable("imageID") Integer id) throws IdNotFound {
+        Optional<QuestionsDomain> byIdQuestions = Optional.ofNullable(questionsDomainRepository.findByIdQuestions(id));
+        Optional<AnwsersImageAndLinks> image = Optional.ofNullable(byIdQuestions.get().getImage());
+        if (!byIdQuestions.isPresent()||!image.isPresent()){
+            throw new IdNotFound();}
+
+        byIdQuestions.get().setImage(null);
+        questionsDomainRepository.save(byIdQuestions.get());
+        anwsersImageAndLinksRepository.delete(image.get());
+
         }
-//        byImage.ifPresent(p -> anwsersImageAndLinksRepository.delete(p.get()));
     }
 
 
-}
+
