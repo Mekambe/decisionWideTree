@@ -14,6 +14,8 @@ public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain
     QuestionsDomain findByNumberAndQuestionHandler(int number, QuestionGroupDomain questionHandler);
     QuestionsDomain findByNumberAndQuestionHandler_IdQuestionGroup (int number, int idNumber);
     QuestionsDomain findByQuestionHandler (int number);
+    QuestionsDomain findByImage (String image);
+    QuestionsDomain findByIdQuestions (int id);
 
 
 }

@@ -3,6 +3,7 @@ package com.decisionTree.wiki.payload;
 public class UploadFileResponse {
     private String fileName;
     private String fileDownloadUri;
+    private String filePath;
     private String fileType;
     private long size;
 
