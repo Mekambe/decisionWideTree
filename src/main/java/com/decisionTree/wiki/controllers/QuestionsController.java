@@ -299,6 +299,7 @@ public class QuestionsController {
     public String returnFirstQuestion (){
         return "Do we go Single?";
     }
+
     @PostMapping("firstQuestion/firstQuestionResponce")
     public boolean anwserfortheFirstQuestion (@RequestParam(value="firstQuestion") String firstQuestion){
         if (firstQuestion.equals("Yes")){
