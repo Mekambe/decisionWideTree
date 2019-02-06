@@ -347,6 +347,7 @@ public class QuestionsController {
 
         questionDto.setQuestion(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestion());
         questionDto.setGroupId(byNumberAndQuestionHandler_idQuestionGroup.get().getIdQuestions());
+        questionDto.setLink(byNumberAndQuestionHandler_idQuestionGroup.get().getLink());
         questionDto.setRoot(treeRootNumber.get().getRoot());
         questionDto.setRight(treeRootNumber.get().getRight());
         questionDto.setLeft(treeRootNumber.get().getLeft());

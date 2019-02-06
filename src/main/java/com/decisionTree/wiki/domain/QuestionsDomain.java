@@ -28,7 +28,17 @@ public class QuestionsDomain {
     @OneToOne
     private AnwsersImageAndLinks image;
 
+    private String link;
+
     private int number;
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
 
     private String question;
 
