@@ -1,5 +1,6 @@
 package com.decisionTree.wiki.services;
 
+import com.decisionTree.wiki.controllers.QuestionsController;
 import com.decisionTree.wiki.dao.QuestionGroupRepository;
 import com.decisionTree.wiki.dao.QuestionsDomainRepository;
 import com.decisionTree.wiki.dao.TreeRepository;
@@ -7,12 +8,14 @@ import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.domain.TreeDomain;
 import com.decisionTree.wiki.dto.QuestionDto;
+import com.decisionTree.wiki.exceptions.IdNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 
 @Service
@@ -21,6 +24,7 @@ public class TreeLogicServiceImpl implements TreeLogicService {
     private QuestionsDomainRepository questionsDomainRepository;
     private TreeRepository treeRepository;
     private QuestionGroupRepository questionGroupRepository;
+    private QuestionsController questionsController;
 
     @Autowired
     public TreeLogicServiceImpl(QuestionsDomainRepository questionsDomainRepository, TreeRepository treeRepository, QuestionGroupRepository questionGroupRepository) {
@@ -78,4 +82,25 @@ public class TreeLogicServiceImpl implements TreeLogicService {
 
 
     }
+
+    public QuestionDto returnAllTreeQuestions (int id)  {
+
+        for (int i = 0; i < 64; i++){
+            try {
+                QuestionDto questionDto = questionsController.returnNextRandomQuestion(i, id);
+            } catch (IdNotFound idNotFound) {
+                idNotFound.printStackTrace();
+            }
+        }
+
+        QuestionDto questionDto = new QuestionDto();
+
+        return questionDto;
+    }
+
+
+
+
+
+
 }

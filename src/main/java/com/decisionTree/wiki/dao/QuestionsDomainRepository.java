@@ -18,4 +18,5 @@ public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain
     QuestionsDomain findByIdQuestions (int id);
 
 
+
 }

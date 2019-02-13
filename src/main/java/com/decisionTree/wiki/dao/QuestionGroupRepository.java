@@ -12,6 +12,7 @@ import java.util.Optional;
 @Repository
 public interface QuestionGroupRepository extends JpaRepository<QuestionGroupDomain, Integer> {
 
+
     List<QuestionGroupDomain> findAllByActive (boolean active);
     List<QuestionGroupDomain> findAllBySingle (boolean single);
     Optional <QuestionGroupDomain> findByName (String name);

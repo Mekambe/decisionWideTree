@@ -2,7 +2,6 @@ package com.decisionTree.wiki.controllers;
 
 import com.decisionTree.wiki.dao.*;
 import com.decisionTree.wiki.domain.*;
-import com.decisionTree.wiki.dto.ImageAndLinkDto;
 import com.decisionTree.wiki.dto.NewQuestionDto;
 import com.decisionTree.wiki.dto.NewQuestionGroupDto;
 import com.decisionTree.wiki.dto.QuestionDto;
@@ -77,6 +76,13 @@ public class QuestionsController {
         return questionGroupRepository.findAll();
 
     }
+
+//    @GetMapping ("/questionGroup/returnOne")
+//    public List<QuestionGroupDomain> returnOneQuestionGroup (int id){
+//        List<QuestionGroupDomain> byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(id);
+//        return byIdQuestionGroup;
+//    }
+
     @GetMapping("/User/findAllUsers")
     public List<UsersDomain> findAllUsers(){
        return usersDomainRepository.findAll();
@@ -107,17 +113,17 @@ public class QuestionsController {
         return questionById;
     }
 
-    @GetMapping("/questionQroup/questionQroupID")
-    public Optional<QuestionGroupDomain> findQuestionGroupById(@PathParam("qqID") int qqID) throws IdNotFound {
-
-        Optional<QuestionGroupDomain> questionGroupById = questionGroupRepository.findById(qqID);
-        if (!questionGroupById.isPresent()) {
-            throw new IdNotFound();
-        }
-
-        return questionGroupById;
-
-    }
+//    @GetMapping("/questionQroup/questionQroupID")
+//    public Optional<QuestionGroupDomain> findQuestionGroupById(@PathParam("qqID") int qqID) throws IdNotFound {
+//
+//        Optional <QuestionGroupDomain> questionGroupById = Optional.ofNullable((questionGroupRepository.findByIdQuestionGroup(qqID)));
+//        if (!questionGroupById.isPresent()) {
+//            throw new IdNotFound();
+//        }
+//
+//        return questionGroupById;
+//
+//    }
 
     @GetMapping("/tree/treeID")
     public Optional<TreeDomain> findTreeById(@PathParam("tID") int tID) throws IdNotFound {
@@ -211,7 +217,9 @@ public class QuestionsController {
     @PostMapping("/questions/addQuestion")
     public ResponseEntity<Integer> addNewQuestion(@RequestParam(value = "question") String question,
                                                   @RequestParam(value = "number") int number,
-                                                  @RequestParam(value = "questionGroup") int groupId) {
+                                                  @RequestParam(value = "questionGroup") int groupId,
+                                                  @RequestParam(value="link") String link) {
+
 
 
         QuestionsDomain newQuestion = new QuestionsDomain();
@@ -219,6 +227,7 @@ public class QuestionsController {
         newQuestion.setQuestion(question);
         newQuestion.setNumber(number);
         newQuestion.setQuestionHandler(group);
+        newQuestion.setLink(link);
         group.setIdQuestionGroup(groupId);
 
 
@@ -242,7 +251,7 @@ public class QuestionsController {
 
 
     @PostMapping("/questions/addQuestionOrUpdate")
-    public void addNewQuestionOrUpdate(@RequestBody NewQuestionDto newQuestionDto) throws GroupNotFound {
+    public QuestionsDomain addNewQuestionOrUpdate(@RequestBody NewQuestionDto newQuestionDto) throws GroupNotFound {
 
 
         Optional<QuestionGroupDomain> questionGroupNumber = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
@@ -252,7 +261,9 @@ public class QuestionsController {
                 question.get().setQuestion(newQuestionDto.getQuestion());
 
 
-                questionsDomainRepository.save(question.get());
+                QuestionsDomain save = questionsDomainRepository.save(question.get());
+
+                return save;
 
             } else {
                 QuestionsDomain questionsDomain = new QuestionsDomain();
@@ -261,6 +272,7 @@ public class QuestionsController {
                 questionsDomain.setQuestionHandler(questionGroupNumber.get());
                 questionsDomainRepository.save(questionsDomain);
 
+                return  questionsDomain;
 
             }
         } else {
@@ -268,7 +280,32 @@ public class QuestionsController {
 
 
         }
+
     }
+
+
+//    @PostMapping ("/createNewTreeWithOneQuestion")
+//
+//    public void createNewTreeWithOneQuestion () {
+//
+//
+//        QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+//        questionGroupDomain.setGroupId();
+//        questionGroupRepository.save(questionGroupDomain);
+//        List<QuestionsDomain> groupId = questionGroupDomain.getGroupId();
+//
+//        QuestionsDomain questionsDomain = new QuestionsDomain();
+//        questionsDomain.setQuestion("Frst question of a new group");
+//        questionsDomain.setQuestionHandler((QuestionGroupDomain) groupId);
+//        questionsDomainRepository.save(questionsDomain);
+//
+//
+//        return groupId;
+//
+//    }
+
+
+
 
     @PostMapping("questionGroup/addQuestionGroup")
     public void addNewQuestionGroup (@RequestBody NewQuestionGroupDto newQuestionGroupDto){
@@ -353,9 +390,21 @@ public class QuestionsController {
         questionDto.setLeft(treeRootNumber.get().getLeft());
 
         return questionDto;
-
-
     }
+
+   @GetMapping ("/findAllTreeForQuestionGroup")
+   public QuestionDto returnAllTreeQuestions (){
+
+
+       QuestionDto questionDto = treeLogicService.returnAllTreeQuestions(1);
+
+       return questionDto;
+   }
+
+
+
+
+
 
 
     @GetMapping("imageLink/find")
@@ -369,6 +418,15 @@ public class QuestionsController {
     //TODO
      //metoda ktora czyta obrazki z dysku
     // zainsaluj microsoftr visual studio code
+
+
+    @GetMapping ("firstQuestionProfile")
+    public String returnFirstQuestionProfile (){
+        return "Do you want to choose your game ?";
+    }
+
+
+
 
 
     }
