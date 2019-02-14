@@ -1,3 +1,8 @@
+/*
+ * Developed by Jan Misiorny
+ * February A.D. 2019
+ */
+
 package com.decisionTree.wiki.controllers;
 
 import com.decisionTree.wiki.dao.AnwsersImageAndLinksRepository;

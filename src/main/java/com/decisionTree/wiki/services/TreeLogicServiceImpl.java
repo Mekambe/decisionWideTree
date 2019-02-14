@@ -1,3 +1,8 @@
+/*
+ * Developed by Jan Misiorny
+ * February A.D. 2019
+ */
+
 package com.decisionTree.wiki.services;
 
 import com.decisionTree.wiki.controllers.QuestionsController;

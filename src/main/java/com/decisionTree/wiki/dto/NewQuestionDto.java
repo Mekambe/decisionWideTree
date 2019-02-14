@@ -11,7 +11,15 @@ public class NewQuestionDto {
     String question;
     int number;
     int  questionHandler;
+    String link;
 
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
 
     public String getQuestion() {
         return question;

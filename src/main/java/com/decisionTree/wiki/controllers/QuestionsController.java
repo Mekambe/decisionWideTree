@@ -1,3 +1,8 @@
+/*
+ * Developed by Jan Misiorny
+ * February A.D. 2019
+ */
+
 package com.decisionTree.wiki.controllers;
 
 import com.decisionTree.wiki.dao.*;
@@ -71,17 +76,17 @@ public class QuestionsController {
         return questionsDomainRepository.findAll();
     }
 
-    @GetMapping("/questionQroup/findAllQQ")
+    @GetMapping("/questionGroup/findAllQQ")
     public List<QuestionGroupDomain> returnAllQuestionGroup(){
         return questionGroupRepository.findAll();
 
     }
 
-//    @GetMapping ("/questionGroup/returnOne")
-//    public List<QuestionGroupDomain> returnOneQuestionGroup (int id){
-//        List<QuestionGroupDomain> byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(id);
-//        return byIdQuestionGroup;
-//    }
+    @GetMapping ("/questionGroup/returnOne")
+    public QuestionGroupDomain returnOneQuestionGroup (int id){
+        QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(id);
+        return byIdQuestionGroup;
+    }
 
     @GetMapping("/User/findAllUsers")
     public List<UsersDomain> findAllUsers(){
@@ -258,7 +263,9 @@ public class QuestionsController {
         if (questionGroupNumber.isPresent()) {
             Optional<QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(), questionGroupNumber.get()));
             if (question.isPresent() && question.get().getQuestionHandler().getIdQuestionGroup() == questionGroupNumber.get().getIdQuestionGroup()) {
+
                 question.get().setQuestion(newQuestionDto.getQuestion());
+                question.get().setLink(newQuestionDto.getLink());
 
 
                 QuestionsDomain save = questionsDomainRepository.save(question.get());
@@ -270,6 +277,7 @@ public class QuestionsController {
                 questionsDomain.setNumber(newQuestionDto.getNumber());
                 questionsDomain.setQuestion(newQuestionDto.getQuestion());
                 questionsDomain.setQuestionHandler(questionGroupNumber.get());
+                questionsDomain.setLink(newQuestionDto.getLink());
                 questionsDomainRepository.save(questionsDomain);
 
                 return  questionsDomain;
@@ -284,25 +292,21 @@ public class QuestionsController {
     }
 
 
-//    @PostMapping ("/createNewTreeWithOneQuestion")
-//
-//    public void createNewTreeWithOneQuestion () {
-//
-//
-//        QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
-//        questionGroupDomain.setGroupId();
-//        questionGroupRepository.save(questionGroupDomain);
-//        List<QuestionsDomain> groupId = questionGroupDomain.getGroupId();
-//
-//        QuestionsDomain questionsDomain = new QuestionsDomain();
-//        questionsDomain.setQuestion("Frst question of a new group");
-//        questionsDomain.setQuestionHandler((QuestionGroupDomain) groupId);
-//        questionsDomainRepository.save(questionsDomain);
-//
-//
-//        return groupId;
-//
-//    }
+    @GetMapping("questionGroup/addQneQuestionGroupAndOneQuestion")
+    public void addGroupAndQuestion (){
+
+        QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+        QuestionGroupDomain save = questionGroupRepository.save(questionGroupDomain);
+
+        Optional<QuestionGroupDomain> byId = questionGroupRepository.findById(save.getIdQuestionGroup());
+
+        if (byId.isPresent()) {
+            QuestionsDomain questionsDomain = new QuestionsDomain();
+            questionsDomain.setQuestionHandler(byId.get());
+            questionsDomain.setNumber(1);
+            QuestionsDomain save2 = questionsDomainRepository.save(questionsDomain);
+        }
+    }
 
 
 
