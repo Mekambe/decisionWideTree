@@ -308,6 +308,26 @@ public class QuestionsController {
         }
     }
 
+    @PostMapping("questionGroup/updateQuestionGroup")
+    public ResponseEntity<Integer> updateSingleAndActiveInsideQuestionGroup (@RequestBody NewQuestionGroupDto newQuestionGroupDto) throws IdNotFound {
+
+        Optional<QuestionGroupDomain> byIdQuestionGroup = Optional.ofNullable(questionGroupRepository.findByIdQuestionGroup(newQuestionGroupDto.getIdGroup()));
+        if (!byIdQuestionGroup.isPresent()){
+            throw new IdNotFound();
+        }else {
+            byIdQuestionGroup.get().setSingle(newQuestionGroupDto.isSingle());
+            byIdQuestionGroup.get().setActive(newQuestionGroupDto.isActive());
+
+            QuestionGroupDomain save = questionGroupRepository.save(byIdQuestionGroup.get());
+
+
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(Math.toIntExact(save.getIdQuestionGroup()));
+
+        }
+
+
+    }
+
 
 
 
