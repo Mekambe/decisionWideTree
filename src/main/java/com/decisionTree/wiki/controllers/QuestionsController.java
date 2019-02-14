@@ -88,11 +88,25 @@ public class QuestionsController {
         return byIdQuestionGroup;
     }
 
+    @GetMapping("/questionGroup/returnAllGroupsID")
+    public int returnAllIDForGroups (){
+        List<QuestionGroupDomain> all = questionGroupRepository.findAll();
+        NewQuestionDto newQuestionDto = new NewQuestionDto();
+        for (QuestionGroupDomain list : all){
+            list.getIdQuestionGroup();
+
+
+        }
+
+
+        return 0;
+    }
+
+
     @GetMapping("/User/findAllUsers")
     public List<UsersDomain> findAllUsers(){
        return usersDomainRepository.findAll();
     }
-
 
 
 
@@ -450,7 +464,43 @@ public class QuestionsController {
     }
 
 
+    @GetMapping("changedLink")
+    public String returnChangeLink (@RequestParam (value = "link") String link) {
 
+        char d = 'd';
+        char e = 'e';
+        char slash = '/';
+        for (int i = 0; i < link.length(); i++) {
+
+            char linkChar = link.charAt(i);
+//            25,26
+            if (d == link.charAt(25) && e == link.charAt(26)) {
+                return link;
+
+
+            } else{
+                StringBuilder newLInk = new StringBuilder(link);
+                newLInk.insert(24,d);
+                newLInk.insert(25,e);
+                newLInk.insert(26,slash);
+
+                return newLInk.toString();
+
+
+
+        }
+    }
+        return null;
+    }
+
+    @GetMapping("customerLink")
+    public String returnLinkThatCustomerIsIn (@RequestParam(value="idQuestion") int idQuestion){
+
+        Optional<QuestionsDomain> byId = questionsDomainRepository.findById(idQuestion);
+
+        return byId.get().getLink();
 
 
     }
+
+}

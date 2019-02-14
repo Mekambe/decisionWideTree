@@ -20,6 +20,8 @@ public interface QuestionGroupRepository extends JpaRepository<QuestionGroupDoma
     QuestionGroupDomain findByIdQuestionGroup (int id);
 
 
+
+
 }
 
 
