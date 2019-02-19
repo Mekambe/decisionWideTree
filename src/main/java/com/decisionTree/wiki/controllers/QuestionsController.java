@@ -8,6 +8,7 @@ package com.decisionTree.wiki.controllers;
 import com.decisionTree.wiki.dao.*;
 import com.decisionTree.wiki.domain.*;
 import com.decisionTree.wiki.dto.NewQuestionDto;
+import com.decisionTree.wiki.dto.NewQuestionGroupBooleanDto;
 import com.decisionTree.wiki.dto.NewQuestionGroupDto;
 import com.decisionTree.wiki.dto.QuestionDto;
 import com.decisionTree.wiki.exceptions.GroupNotFound;
@@ -323,14 +324,14 @@ public class QuestionsController {
     }
 
     @PostMapping("questionGroup/updateQuestionGroup")
-    public ResponseEntity<Integer> updateSingleAndActiveInsideQuestionGroup (@RequestBody NewQuestionGroupDto newQuestionGroupDto) throws IdNotFound {
+    public ResponseEntity<Integer> updateSingleAndActiveInsideQuestionGroup (@RequestBody NewQuestionGroupBooleanDto NewQuestionGroupBooleanDto) throws IdNotFound {
 
-        Optional<QuestionGroupDomain> byIdQuestionGroup = Optional.ofNullable(questionGroupRepository.findByIdQuestionGroup(newQuestionGroupDto.getIdGroup()));
+        Optional<QuestionGroupDomain> byIdQuestionGroup = Optional.ofNullable(questionGroupRepository.findByIdQuestionGroup(NewQuestionGroupBooleanDto.getIdGroup()));
         if (!byIdQuestionGroup.isPresent()){
             throw new IdNotFound();
         }else {
-            byIdQuestionGroup.get().setSingle(newQuestionGroupDto.isSingle());
-            byIdQuestionGroup.get().setActive(newQuestionGroupDto.isActive());
+            byIdQuestionGroup.get().setSingle(NewQuestionGroupBooleanDto.getIsSingle());
+            byIdQuestionGroup.get().setActive(NewQuestionGroupBooleanDto.getIsActive());
 
             QuestionGroupDomain save = questionGroupRepository.save(byIdQuestionGroup.get());
 
@@ -474,8 +475,8 @@ public class QuestionsController {
 
             char linkChar = link.charAt(i);
 //            25,26
-            if (d == link.charAt(25) && e == link.charAt(26)) {
-                return link;
+            if (d == link.charAt(24) && e == link.charAt(25)) {
+                return link + " to jest to";
 
 
             } else{

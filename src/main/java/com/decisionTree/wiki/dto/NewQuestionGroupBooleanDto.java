@@ -1,7 +1,11 @@
+/*
+ * Developed by Jan Misiorny
+ * February A.D. 2019
+ */
+
 package com.decisionTree.wiki.dto;
 
-public class NewQuestionGroupDto {
-
+public class NewQuestionGroupBooleanDto {
     int idGroup;
     boolean active ;
     boolean single;
@@ -15,7 +19,7 @@ public class NewQuestionGroupDto {
         this.idGroup = idGroup;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return active;
     }
 
@@ -23,7 +27,7 @@ public class NewQuestionGroupDto {
         this.active = active;
     }
 
-    public boolean isSingle() {
+    public boolean getIsSingle() {
         return single;
     }
 
@@ -38,4 +42,6 @@ public class NewQuestionGroupDto {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }
