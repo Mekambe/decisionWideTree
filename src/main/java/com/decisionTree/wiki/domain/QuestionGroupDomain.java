@@ -25,6 +25,8 @@ public class QuestionGroupDomain {
 
     private boolean single;
 
+    private String tag;
+
     @Column(unique = true)
     private String name;
 
@@ -66,5 +68,13 @@ public class QuestionGroupDomain {
 
     public void setSingle(boolean single) {
         this.single = single;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

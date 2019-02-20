@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,27 +81,26 @@ public class QuestionsController {
     @GetMapping("/questionGroup/findAllQQ")
     public List<QuestionGroupDomain> returnAllQuestionGroup(){
         return questionGroupRepository.findAll();
-
     }
 
     @GetMapping ("/questionGroup/returnOne")
-    public QuestionGroupDomain returnOneQuestionGroup (int id){
+    public QuestionGroupDomain returnOneQuestionGroup (@PathParam("id") int id){
         QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(id);
         return byIdQuestionGroup;
     }
 
     @GetMapping("/questionGroup/returnAllGroupsID")
-    public int returnAllIDForGroups (){
+    public ArrayList<Object> returnAllIDForGroups (){
+        ArrayList<Object> list = new ArrayList<Object>();
+
         List<QuestionGroupDomain> all = questionGroupRepository.findAll();
-        NewQuestionDto newQuestionDto = new NewQuestionDto();
-        for (QuestionGroupDomain list : all){
-            list.getIdQuestionGroup();
 
-
+        for (QuestionGroupDomain object : all){
+            int idQuestionGroup = object.getIdQuestionGroup();
+            list.add(idQuestionGroup);
         }
 
-
-        return 0;
+        return list;
     }
 
 
@@ -324,19 +324,40 @@ public class QuestionsController {
     }
 
     @PostMapping("questionGroup/updateQuestionGroup")
-    public ResponseEntity<Integer> updateSingleAndActiveInsideQuestionGroup (@RequestBody NewQuestionGroupBooleanDto NewQuestionGroupBooleanDto) throws IdNotFound {
+    public ResponseEntity<Integer> updateSingleAndActiveInsideQuestionGroup (@RequestBody NewQuestionGroupBooleanDto newQuestionGroupBooleanDto) throws IdNotFound {
 
-        Optional<QuestionGroupDomain> byIdQuestionGroup = Optional.ofNullable(questionGroupRepository.findByIdQuestionGroup(NewQuestionGroupBooleanDto.getIdGroup()));
+        Optional<QuestionGroupDomain> byIdQuestionGroup = Optional.ofNullable(questionGroupRepository.findByIdQuestionGroup(newQuestionGroupBooleanDto.getIdGroup()));
         if (!byIdQuestionGroup.isPresent()){
             throw new IdNotFound();
         }else {
-            byIdQuestionGroup.get().setSingle(NewQuestionGroupBooleanDto.getIsSingle());
-            byIdQuestionGroup.get().setActive(NewQuestionGroupBooleanDto.getIsActive());
 
+            byIdQuestionGroup.get().setActive(newQuestionGroupBooleanDto.isActive());
+            byIdQuestionGroup.get().setSingle(newQuestionGroupBooleanDto.isSingle());
             QuestionGroupDomain save = questionGroupRepository.save(byIdQuestionGroup.get());
 
-
             return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(Math.toIntExact(save.getIdQuestionGroup()));
+
+
+
+//            if (newQuestionGroupBooleanDto.getActive()=="true" || newQuestionGroupBooleanDto.getSingle()=="true") {
+//
+//                byIdQuestionGroup.get().setSingle(true);
+//                byIdQuestionGroup.get().setActive(true);
+//
+//
+//                QuestionGroupDomain save = questionGroupRepository.save(byIdQuestionGroup.get());
+//
+//
+//                return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(Math.toIntExact(save.getIdQuestionGroup()));
+//            }else {
+//                byIdQuestionGroup.get().setActive(false);
+//                byIdQuestionGroup.get().setActive(false);
+//                QuestionGroupDomain save2 = questionGroupRepository.save(byIdQuestionGroup.get());
+//
+//
+//                return ResponseEntity.status(HttpStatus.IM_USED).body(Math.toIntExact(save2.getIdQuestionGroup()));
+//
+//            }
 
         }
 

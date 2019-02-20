@@ -11,6 +11,7 @@ public class NewQuestionGroupBooleanDto {
     boolean single;
     String name;
 
+
     public int getIdGroup() {
         return idGroup;
     }
@@ -19,7 +20,7 @@ public class NewQuestionGroupBooleanDto {
         this.idGroup = idGroup;
     }
 
-    public boolean getIsActive() {
+    public boolean isActive() {
         return active;
     }
 
@@ -27,7 +28,7 @@ public class NewQuestionGroupBooleanDto {
         this.active = active;
     }
 
-    public boolean getIsSingle() {
+    public boolean isSingle() {
         return single;
     }
 
@@ -42,6 +43,4 @@ public class NewQuestionGroupBooleanDto {
     public void setName(String name) {
         this.name = name;
     }
-
-
 }

@@ -18,6 +18,8 @@ public interface QuestionGroupRepository extends JpaRepository<QuestionGroupDoma
     Optional <QuestionGroupDomain> findByName (String name);
     List<QuestionGroupDomain> findAllBySingleAndActive (boolean active, boolean single);
     QuestionGroupDomain findByIdQuestionGroup (int id);
+    QuestionGroupDomain findByTag (String tag);
+
 
 
 
