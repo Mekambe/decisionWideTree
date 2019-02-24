@@ -21,6 +21,7 @@ public class QuestionGroupDomain {
     @OneToMany (mappedBy = "questionHandler")
     private List<QuestionsDomain>groupId = new ArrayList();
 
+
     private boolean active;
 
     private boolean single;
@@ -29,6 +30,17 @@ public class QuestionGroupDomain {
 
     @Column(unique = true)
     private String name;
+
+
+    private String[] tags;
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
 
     public String getName() {
         return name;
@@ -77,4 +89,6 @@ public class QuestionGroupDomain {
     public void setTag(String tag) {
         this.tag = tag;
     }
+
+
 }

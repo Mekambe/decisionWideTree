@@ -308,7 +308,7 @@ public class QuestionsController {
 
 
     @GetMapping("questionGroup/addQneQuestionGroupAndOneQuestion")
-    public void addGroupAndQuestion (){
+    public int addGroupAndQuestion (){
 
         QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
         QuestionGroupDomain save = questionGroupRepository.save(questionGroupDomain);
@@ -320,7 +320,12 @@ public class QuestionsController {
             questionsDomain.setQuestionHandler(byId.get());
             questionsDomain.setNumber(1);
             QuestionsDomain save2 = questionsDomainRepository.save(questionsDomain);
+
+
         }
+
+
+        return save.getIdQuestionGroup();
     }
 
     @PostMapping("questionGroup/updateQuestionGroup")
