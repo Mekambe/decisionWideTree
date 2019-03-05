@@ -128,6 +128,16 @@ public class FileController {
         anwsersImageAndLinksRepository.delete(image.get());
 
         }
+
+
+
+
+
+
+
+
+
+
     }
 
 

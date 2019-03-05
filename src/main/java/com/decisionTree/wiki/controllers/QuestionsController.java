@@ -289,11 +289,12 @@ public class QuestionsController {
 
             } else {
                 QuestionsDomain questionsDomain = new QuestionsDomain();
-                questionsDomain.setNumber(newQuestionDto.getNumber());
                 questionsDomain.setQuestion(newQuestionDto.getQuestion());
                 questionsDomain.setQuestionHandler(questionGroupNumber.get());
                 questionsDomain.setLink(newQuestionDto.getLink());
-                questionsDomainRepository.save(questionsDomain);
+                QuestionsDomain save = questionsDomainRepository.save(questionsDomain);
+                save.setNumber(save.getIdQuestions());
+                questionsDomainRepository.save(save);
 
                 return  questionsDomain;
 
@@ -307,7 +308,7 @@ public class QuestionsController {
     }
 
 
-    @GetMapping("questionGroup/addQneQuestionGroupAndOneQuestion")
+    @PostMapping("questionGroup/addOneQuestionGroupAndOneQuestion")
     public int addGroupAndQuestion (){
 
         QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
@@ -318,9 +319,10 @@ public class QuestionsController {
         if (byId.isPresent()) {
             QuestionsDomain questionsDomain = new QuestionsDomain();
             questionsDomain.setQuestionHandler(byId.get());
-            questionsDomain.setNumber(1);
-            QuestionsDomain save2 = questionsDomainRepository.save(questionsDomain);
 
+            QuestionsDomain save2 = questionsDomainRepository.save(questionsDomain);
+             save2.setNumber(save2.getIdQuestions());
+             questionsDomainRepository.save(save2);
 
         }
 
@@ -340,29 +342,9 @@ public class QuestionsController {
             byIdQuestionGroup.get().setSingle(newQuestionGroupBooleanDto.isSingle());
             QuestionGroupDomain save = questionGroupRepository.save(byIdQuestionGroup.get());
 
-            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(Math.toIntExact(save.getIdQuestionGroup()));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(Math.toIntExact(save.getIdQuestionGroup()));
 
 
-
-//            if (newQuestionGroupBooleanDto.getActive()=="true" || newQuestionGroupBooleanDto.getSingle()=="true") {
-//
-//                byIdQuestionGroup.get().setSingle(true);
-//                byIdQuestionGroup.get().setActive(true);
-//
-//
-//                QuestionGroupDomain save = questionGroupRepository.save(byIdQuestionGroup.get());
-//
-//
-//                return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(Math.toIntExact(save.getIdQuestionGroup()));
-//            }else {
-//                byIdQuestionGroup.get().setActive(false);
-//                byIdQuestionGroup.get().setActive(false);
-//                QuestionGroupDomain save2 = questionGroupRepository.save(byIdQuestionGroup.get());
-//
-//
-//                return ResponseEntity.status(HttpStatus.IM_USED).body(Math.toIntExact(save2.getIdQuestionGroup()));
-//
-//            }
 
         }
 
