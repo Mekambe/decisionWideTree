@@ -19,4 +19,5 @@ public interface QuestionsDomainRepository extends JpaRepository<QuestionsDomain
 
 
 
+
 }
