@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 public interface CustomerDataRepository extends JpaRepository<CustomerDataDomain, Integer> {
 
     CustomerDataDomain findByIDCustomerData (int id);
+   CustomerDataDomain findByIp (String ip);
+
 
 
 

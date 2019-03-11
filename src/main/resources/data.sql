@@ -85,7 +85,7 @@ INSERT INTO QUESTIONS_DOMAIN (ID_QUESTIONS,NUMBER,QUESTION,ID_QUESTION_GROUP) VA
 
 
 -- // test group for the first random tree random questiona
--- INSERT INTO CUSTOMER_DATA_DOMAIN (IDCUSTOMER_DATA,IP,CHOICES,DATE,DID,GROUP_ID,TAGS) values (1,'test','test','test','test','test','test')
+INSERT INTO CUSTOMER_DATA_DOMAIN (IDCUSTOMER_DATA,IP,CHOICES,DATE,DID,GROUP_ID,TAGS) values (1,'test','test','test','test','1','test')
 
 INSERT INTO QUESTIONS_DOMAIN (ID_QUESTIONS,NUMBER,QUESTION,ID_QUESTION_GROUP) VALUES (1,1,'The Journey starts in the Forest',1)
 INSERT INTO QUESTIONS_DOMAIN (ID_QUESTIONS,NUMBER,QUESTION,ID_QUESTION_GROUP) VALUES (2,2,'Just around the Riverbend is a city bridge and near it a road to a canyon. Do you want to explore it ?',1)

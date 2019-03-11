@@ -25,7 +25,7 @@ public class CustomerDataDomain {
     private int iDCustomerData;
 
     String date;
-    String Ip;
+    String ip;
     String did;
     String groupId;
     String choices;
@@ -48,11 +48,11 @@ public class CustomerDataDomain {
     }
 
     public String getIp() {
-        return Ip;
+        return ip;
     }
 
     public void setIp(String ip) {
-        Ip = ip;
+        this.ip = ip;
     }
 
     public String getGroupId() {

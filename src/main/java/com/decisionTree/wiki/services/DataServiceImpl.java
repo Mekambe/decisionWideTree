@@ -39,7 +39,7 @@ public class DataServiceImpl implements DataService {
 public List<QuestionGroupDomain> findAllQuestionGroupsBasedOnTags (String tag) {
 
 
-    String[] split = tag.split("/");
+    String[] split = tag.split(",");
     List<QuestionGroupDomain> objects = new ArrayList<>();
     List<QuestionsDomain> object2 = new ArrayList<>();
     for (String tags : split) {

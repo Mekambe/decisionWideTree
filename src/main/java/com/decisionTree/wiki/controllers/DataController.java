@@ -17,12 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -68,22 +66,77 @@ public class DataController {
 
 
     @GetMapping("tag/returnaListOfGroupDomainsContainingGivenTags")
-    public Optional<QuestionsDomain> returnaListOfGroupDomainsContainingGivenTags (@PathParam("tag") String tag) {
+    public List<QuestionsDomain> returnaListOfGroupDomainsContainingGivenTags (@RequestParam("tag") String tag) {
+
+        List<QuestionsDomain>tree=new ArrayList();
 
 
-
-
-
+        String[] split1 = tag.split(",");
 
         List<QuestionGroupDomain> allQuestionGroupsBasedOnTags = dataService.findAllQuestionGroupsBasedOnTags(tag);
-        QuestionGroupDomain randomQuestionGroup = allQuestionGroupsBasedOnTags.get(new Random().nextInt(allQuestionGroupsBasedOnTags.size()));
-        List<QuestionsDomain> groupId = randomQuestionGroup.getGroupId();
 
-        Optional<QuestionsDomain> first = groupId.stream().findFirst();
+        int matchGlobal = 0;
+
+        List<Integer> matchGroupId = new ArrayList<>();
+
+        for (int i = 0; i <allQuestionGroupsBasedOnTags.size() ; i++) {
+            QuestionGroupDomain questionGroupDomain = allQuestionGroupsBasedOnTags.get(i);
+
+            String tagsFromOneTree = questionGroupDomain.getTag();
+
+            int match = 0;
+            for (int j = 0; j < split1.length; j++) {
+                if ( tagsFromOneTree.contains(split1[j])){
+                    match ++;
+
+                }
+            }   int idQuestionGroup = questionGroupDomain.getIdQuestionGroup(); if (match==matchGlobal){
 
 
-        return first;
+                matchGroupId.add(idQuestionGroup);
 
+            } if (match>matchGlobal){
+                matchGlobal=match;
+
+                matchGroupId.clear();
+
+                matchGroupId.add(idQuestionGroup);
+            }
+        }
+
+        Integer theRightTree = matchGroupId.get(new Random().nextInt(matchGroupId.size()));
+
+
+        QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(theRightTree);
+        List<QuestionsDomain> groupId1 = byIdQuestionGroup.getGroupId();
+
+
+        Optional<QuestionsDomain> first = groupId1.stream().findFirst();
+
+
+            tree.add(first.get());
+
+
+
+
+
+//        QuestionGroupDomain randomQuestionGroup = allQuestionGroupsBasedOnTags.get(new Random().nextInt(allQuestionGroupsBasedOnTags.size()));
+//
+//
+//        int idQuestionGroup = randomQuestionGroup.getIdQuestionGroup();
+//        if (idQuestionGroup == Integer.parseInt(ip)){
+//
+//        }
+//
+//
+//        List<QuestionsDomain> groupId = randomQuestionGroup.getGroupId();
+//
+//        Optional<QuestionsDomain> first = groupId.stream().findFirst();
+//
+//
+//        return first;
+
+        return tree;
     }
 
 
@@ -97,7 +150,7 @@ public class DataController {
     public ResponseEntity<Integer> saveAllUserDataInBase (@RequestBody CustomerDataDto customerDataDto) throws IdNotFound {
         Optional<CustomerDataDomain> customerDataDomain = Optional.of(new CustomerDataDomain());
 
-        customerDataDomain.get().setDate(customerDataDto.getData());
+        customerDataDomain.get().setDate(customerDataDto.getDate());
         customerDataDomain.get().setIp(customerDataDto.getIp());
         customerDataDomain.get().setDid(customerDataDto.getDid());
         customerDataDomain.get().setGroupId(customerDataDto.getGroupId());
@@ -108,6 +161,22 @@ public class DataController {
         CustomerDataDomain save = customerDataRepository.save(customerDataDomain.get());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Math.toIntExact(save.getiDCustomerData()));
+
+
+    }
+
+
+    @PostMapping ("data/checkIfTheIpIsPresent")
+    public String  checkIpAndIfItIsPresentLoadNewTree (@RequestParam(value="ip") String ip1) {
+
+       Optional <CustomerDataDomain>  byIp = Optional.ofNullable(customerDataRepository.findByIp(ip1));
+
+        if (byIp.isPresent()){
+            return byIp.get().getGroupId();
+        }else {return "Unique id";}
+
+
+
 
 
     }
