@@ -68,7 +68,7 @@ public class DataController {
     @GetMapping("tag/returnaListOfGroupDomainsContainingGivenTags")
     public List<QuestionsDomain> returnaListOfGroupDomainsContainingGivenTags (@RequestParam("tag") String tag) {
 
-        List<QuestionsDomain>tree=new ArrayList();
+        List tree=new ArrayList();
 
 
         String[] split1 = tag.split(",");
@@ -115,6 +115,7 @@ public class DataController {
 
 
             tree.add(first.get());
+            tree.add(theRightTree);
 
 
 
