@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -103,6 +104,28 @@ public class TreeLogicServiceImpl implements TreeLogicService {
         return questionDto;
     }
 
+    public QuestionDto mappingTheQuestionsForTheTreeAlgorythm (int questionId,int questionGroupId ) throws IdNotFound {
+
+        Optional <QuestionsDomain> byNumberAndQuestionHandler_idQuestionGroup = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionId, questionGroupId));
+
+        Optional <TreeDomain> treeRootNumber = Optional.ofNullable(treeRepository.findByRoot(questionId));
+
+        if (!byNumberAndQuestionHandler_idQuestionGroup.isPresent()&&treeRootNumber.isPresent()){throw new IdNotFound();}
+        QuestionDto questionDto = new QuestionDto();
+
+        questionDto.setQuestion(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestion());
+        questionDto.setGroupId(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestionHandler().getIdQuestionGroup());
+        questionDto.setIdQuestions(byNumberAndQuestionHandler_idQuestionGroup.get().getIdQuestions());
+        questionDto.setLink(byNumberAndQuestionHandler_idQuestionGroup.get().getLink());
+        questionDto.setRoot(treeRootNumber.get().getRoot());
+        questionDto.setRight(treeRootNumber.get().getRight());
+        questionDto.setLeft(treeRootNumber.get().getLeft());
+
+        return questionDto;
+
+
+
+    }
 
 
 

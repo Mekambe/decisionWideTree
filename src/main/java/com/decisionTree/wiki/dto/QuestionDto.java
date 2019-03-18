@@ -9,6 +9,15 @@ int right;
 String question;
 int groupId;
 String link;
+int idQuestions;
+
+    public int getIdQuestions() {
+        return idQuestions;
+    }
+
+    public void setIdQuestions(int idQuestions) {
+        this.idQuestions = idQuestions;
+    }
 
     public String getLink() {
         return link;

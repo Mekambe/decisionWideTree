@@ -20,7 +20,7 @@ public interface QuestionGroupRepository extends JpaRepository<QuestionGroupDoma
     QuestionGroupDomain findByIdQuestionGroup (int id);
     QuestionGroupDomain findByTag (String tag);
     List<QuestionGroupDomain> findByTagIsContaining (String tag);
-
+    Optional <QuestionGroupDomain> findByIdQuestionGroupAndActive(int id, boolean active);
 
 
 

@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 public class QuestionsController {
@@ -107,6 +109,25 @@ public class QuestionsController {
     @GetMapping("/User/findAllUsers")
     public List<UsersDomain> findAllUsers(){
        return usersDomainRepository.findAll();
+    }
+
+    @GetMapping("findAllTags")
+    public List<String> findAllTags(){
+        List<QuestionGroupDomain> all = questionGroupRepository.findAll();
+        List<String> objects = new ArrayList<>();
+
+        for (QuestionGroupDomain tags:all){
+            String tag = tags.getTag();
+            objects.add(tag);
+        }
+
+
+        String tags = String.join(",",objects);
+        String[] split = tags.split(",");
+        List<String> collect = Arrays.stream(split).distinct().collect(Collectors.toList());
+
+
+        return collect;
     }
 
 
@@ -312,6 +333,7 @@ public class QuestionsController {
     public int addGroupAndQuestion (){
 
         QuestionGroupDomain questionGroupDomain = new QuestionGroupDomain();
+        questionGroupDomain.setTag("");
         QuestionGroupDomain save = questionGroupRepository.save(questionGroupDomain);
 
         Optional<QuestionGroupDomain> byId = questionGroupRepository.findById(save.getIdQuestionGroup());
@@ -369,6 +391,8 @@ public class QuestionsController {
             questionGroupDomain.setName(newQuestionGroupDto.getName());
             questionGroupDomain.setSingle(newQuestionGroupDto.isSingle());
             questionGroupDomain.setActive(newQuestionGroupDto.isSingle());
+            questionGroupDomain.setTag("");
+
 
             questionGroupRepository.save(questionGroupDomain);
 
@@ -379,10 +403,10 @@ public class QuestionsController {
 
 
 
-    @GetMapping ("firstQuestion")
-    public String returnFirstQuestion (){
-        return "Do we go Single?";
-    }
+//    @GetMapping ("firstQuestion")
+//    public String returnFirstQuestion (){
+//        return "Do we go Single?";
+//    }
 
     @PostMapping("firstQuestion/firstQuestionResponce")
     public boolean anwserfortheFirstQuestion (@RequestParam(value="firstQuestion") String firstQuestion){
@@ -419,23 +443,25 @@ public class QuestionsController {
         return questionDto;
     }
 
-    @GetMapping ("/firstQuestion/nextRandomQuestion")
+    @GetMapping ("nextRandomQuestion")
     public QuestionDto returnNextRandomQuestion (@RequestParam(value="domainNumber") int questionDomainNumber, @RequestParam(value="questionGroupId") int questionGroupId) throws IdNotFound {
+//        Optional <QuestionsDomain> byNumberAndQuestionHandler_idQuestionGroup = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionDomainNumber, questionGroupId));
+//
+//        Optional <TreeDomain> treeRootNumber = Optional.ofNullable(treeRepository.findByRoot(questionDomainNumber));
+//
+//        if (!byNumberAndQuestionHandler_idQuestionGroup.isPresent()&&treeRootNumber.isPresent()){throw new IdNotFound();}
+//        QuestionDto questionDto = new QuestionDto();
+//
+//        questionDto.setQuestion(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestion());
+//        questionDto.setGroupId(byNumberAndQuestionHandler_idQuestionGroup.get().getIdQuestions());
+//        questionDto.setLink(byNumberAndQuestionHandler_idQuestionGroup.get().getLink());
+//        questionDto.setRoot(treeRootNumber.get().getRoot());
+//        questionDto.setRight(treeRootNumber.get().getRight());
+//        questionDto.setLeft(treeRootNumber.get().getLeft());
+//
+//        return questionDto;
 
-        Optional <QuestionsDomain> byNumberAndQuestionHandler_idQuestionGroup = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionDomainNumber, questionGroupId));
-
-        Optional <TreeDomain> treeRootNumber = Optional.ofNullable(treeRepository.findByRoot(questionDomainNumber));
-
-        if (!byNumberAndQuestionHandler_idQuestionGroup.isPresent()&&treeRootNumber.isPresent()){throw new IdNotFound();}
-        QuestionDto questionDto = new QuestionDto();
-
-        questionDto.setQuestion(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestion());
-        questionDto.setGroupId(byNumberAndQuestionHandler_idQuestionGroup.get().getIdQuestions());
-        questionDto.setLink(byNumberAndQuestionHandler_idQuestionGroup.get().getLink());
-        questionDto.setRoot(treeRootNumber.get().getRoot());
-        questionDto.setRight(treeRootNumber.get().getRight());
-        questionDto.setLeft(treeRootNumber.get().getLeft());
-
+        QuestionDto questionDto = treeLogicService.mappingTheQuestionsForTheTreeAlgorythm(questionDomainNumber, questionGroupId);
         return questionDto;
     }
 
@@ -512,4 +538,71 @@ public class QuestionsController {
 
     }
 
+    @PostMapping("updateTags")
+    public void updateTagsInsideAGroupDomain (@RequestParam(value = "questionGroupId") int idQuestionGroup, @RequestParam(value = "updateTag") String tag) throws GroupNotFound {
+
+
+        String[] split1 = tag.split(",");
+
+        Optional<QuestionGroupDomain> byIdQuestionGroup = Optional.ofNullable(questionGroupRepository.findByIdQuestionGroup(idQuestionGroup));
+
+        if (!byIdQuestionGroup.isPresent()){throw new GroupNotFound();} else {
+
+//        Optional<String> tag1 = Optional.ofNullable(byIdQuestionGroup.getTag());
+//
+//        String[] split = tag1.get().split(",");
+
+
+//        if (tag1.isPresent()){
+//
+//            String[] strings = Stream.concat(Arrays.stream(split1), Arrays.stream(split)).toArray(String[]::new);
+//            String s = Arrays.toString(strings);
+//
+//            byIdQuestionGroup.setTag(s);
+//            questionGroupRepository.save(byIdQuestionGroup);
+//            return s;
+//
+//}
+            String upperCaseTag = tag.toUpperCase();
+            byIdQuestionGroup.get().setTag(upperCaseTag);
+            questionGroupRepository.save(byIdQuestionGroup.get());
+
+        }
+    }
+
+    @PostMapping("deleteTag")
+    public void deleteAllTags (@RequestParam(value = "questionGroupId") int idQuestionGroup) {
+
+        QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(idQuestionGroup);
+
+        String tag = byIdQuestionGroup.getTag();
+
+        byIdQuestionGroup.setTag("");
+
+        questionGroupRepository.save(byIdQuestionGroup);
+
+
+    }
+
+//    @PostMapping("deleteTag")
+//    public void deleteOneTag (@RequestParam(value = "questionGroupId") int idQuestionGroup,@RequestParam(value = "tag") String tag){
+//        QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(idQuestionGroup);
+//
+//        String tag1 = byIdQuestionGroup.getTag();
+//        String[] split = tag1.split(",");
+//
+//        if (tag1.contains(tag)){
+//
+//            for (int i = 0; i < split.length; i++) {
+//                String s = split[i];
+//
+//
+//            }
+//
+//
+//            }
+//
+//
+//    }
+//
 }

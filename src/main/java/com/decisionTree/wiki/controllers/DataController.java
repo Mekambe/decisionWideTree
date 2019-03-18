@@ -10,6 +10,7 @@ import com.decisionTree.wiki.domain.CustomerDataDomain;
 import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.dto.CustomerDataDto;
+import com.decisionTree.wiki.dto.QuestionDto;
 import com.decisionTree.wiki.exceptions.IdNotFound;
 import com.decisionTree.wiki.services.DataService;
 import com.decisionTree.wiki.services.TreeLogicService;
@@ -65,8 +66,8 @@ public class DataController {
     }
 
 
-    @GetMapping("tag/returnaListOfGroupDomainsContainingGivenTags")
-    public List<QuestionsDomain> returnaListOfGroupDomainsContainingGivenTags (@RequestParam("tag") String tag) {
+    @GetMapping("firstQuestion")
+    public QuestionDto returnaListOfGroupDomainsContainingGivenTags (@RequestParam("tag") String tag) throws IdNotFound {
 
         List tree=new ArrayList();
 
@@ -110,15 +111,15 @@ public class DataController {
         QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(theRightTree);
         List<QuestionsDomain> groupId1 = byIdQuestionGroup.getGroupId();
 
-
         Optional<QuestionsDomain> first = groupId1.stream().findFirst();
+        int idQuestions = first.get().getNumber();
 
 
-            tree.add(first.get());
-            tree.add(theRightTree);
+//        tree.add(first.get());
+//            tree.add(theRightTree);
 
-
-
+        QuestionDto questionDto = treeLogicService.mappingTheQuestionsForTheTreeAlgorythm(idQuestions, theRightTree);
+        return questionDto;
 
 
 //        QuestionGroupDomain randomQuestionGroup = allQuestionGroupsBasedOnTags.get(new Random().nextInt(allQuestionGroupsBasedOnTags.size()));
@@ -137,7 +138,7 @@ public class DataController {
 //
 //        return first;
 
-        return tree;
+
     }
 
 
