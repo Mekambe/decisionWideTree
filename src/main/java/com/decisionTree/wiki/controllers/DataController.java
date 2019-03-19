@@ -10,7 +10,7 @@ import com.decisionTree.wiki.domain.CustomerDataDomain;
 import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.dto.CustomerDataDto;
-import com.decisionTree.wiki.dto.QuestionDto;
+import com.decisionTree.wiki.dto.QuestionDtoWithTheMatcher;
 import com.decisionTree.wiki.exceptions.IdNotFound;
 import com.decisionTree.wiki.services.DataService;
 import com.decisionTree.wiki.services.TreeLogicService;
@@ -67,7 +67,7 @@ public class DataController {
 
 
     @GetMapping("firstQuestion")
-    public QuestionDto returnaListOfGroupDomainsContainingGivenTags (@RequestParam("tag") String tag) throws IdNotFound {
+    public QuestionDtoWithTheMatcher returnaListOfGroupDomainsContainingGivenTags (@RequestParam("tag") String tag) throws IdNotFound {
 
         List tree=new ArrayList();
 
@@ -77,6 +77,7 @@ public class DataController {
         List<QuestionGroupDomain> allQuestionGroupsBasedOnTags = dataService.findAllQuestionGroupsBasedOnTags(tag);
 
         int matchGlobal = 0;
+        int matchCounting = 0;
 
         List<Integer> matchGroupId = new ArrayList<>();
 
@@ -94,7 +95,9 @@ public class DataController {
             }   int idQuestionGroup = questionGroupDomain.getIdQuestionGroup(); if (match==matchGlobal){
 
 
+
                 matchGroupId.add(idQuestionGroup);
+
 
             } if (match>matchGlobal){
                 matchGlobal=match;
@@ -118,7 +121,7 @@ public class DataController {
 //        tree.add(first.get());
 //            tree.add(theRightTree);
 
-        QuestionDto questionDto = treeLogicService.mappingTheQuestionsForTheTreeAlgorythm(idQuestions, theRightTree);
+        QuestionDtoWithTheMatcher questionDto = treeLogicService.mappingTheQuestionsForTheTreeAlgorythmWithTheMatcher(idQuestions, theRightTree,matchGlobal);
         return questionDto;
 
 

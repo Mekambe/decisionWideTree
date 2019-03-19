@@ -44,7 +44,7 @@ public List<QuestionGroupDomain> findAllQuestionGroupsBasedOnTags (String tag) {
     List<QuestionsDomain> object2 = new ArrayList<>();
     for (String tags : split) {
         String upperCaseTags = tags.toUpperCase();
-        List<QuestionGroupDomain> byTagIsContaining = questionGroupRepository.findByTagIsContaining(upperCaseTags);
+        List<QuestionGroupDomain> byTagIsContaining = questionGroupRepository.findByTagIsContainingAndActive(upperCaseTags, true);
 
 
 

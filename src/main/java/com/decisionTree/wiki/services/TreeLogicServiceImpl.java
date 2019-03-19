@@ -13,6 +13,7 @@ import com.decisionTree.wiki.domain.QuestionGroupDomain;
 import com.decisionTree.wiki.domain.QuestionsDomain;
 import com.decisionTree.wiki.domain.TreeDomain;
 import com.decisionTree.wiki.dto.QuestionDto;
+import com.decisionTree.wiki.dto.QuestionDtoWithTheMatcher;
 import com.decisionTree.wiki.exceptions.IdNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,12 +125,37 @@ public class TreeLogicServiceImpl implements TreeLogicService {
         return questionDto;
 
 
-
     }
 
+    @Override
+    public QuestionDtoWithTheMatcher mappingTheQuestionsForTheTreeAlgorythmWithTheMatcher(int questionId, int questionGroupId, int matcher) throws IdNotFound {
+
+
+        Optional <QuestionsDomain> byNumberAndQuestionHandler_idQuestionGroup = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler_IdQuestionGroup(questionId, questionGroupId));
+
+        Optional <TreeDomain> treeRootNumber = Optional.ofNullable(treeRepository.findByRoot(questionId));
+
+        if (!byNumberAndQuestionHandler_idQuestionGroup.isPresent()&&treeRootNumber.isPresent()){throw new IdNotFound();}
+        QuestionDtoWithTheMatcher questionDtoWithTheMatcher = new QuestionDtoWithTheMatcher();
+
+        questionDtoWithTheMatcher.setQuestion(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestion());
+        questionDtoWithTheMatcher.setGroupId(byNumberAndQuestionHandler_idQuestionGroup.get().getQuestionHandler().getIdQuestionGroup());
+        questionDtoWithTheMatcher.setIdQuestions(byNumberAndQuestionHandler_idQuestionGroup.get().getIdQuestions());
+        questionDtoWithTheMatcher.setLink(byNumberAndQuestionHandler_idQuestionGroup.get().getLink());
+        questionDtoWithTheMatcher.setRoot(treeRootNumber.get().getRoot());
+        questionDtoWithTheMatcher.setRight(treeRootNumber.get().getRight());
+        questionDtoWithTheMatcher.setLeft(treeRootNumber.get().getLeft());
+        questionDtoWithTheMatcher.setMatcher(matcher);
+
+
+        return questionDtoWithTheMatcher;
 
 
 
+
+
+
+    }
 
 
 }

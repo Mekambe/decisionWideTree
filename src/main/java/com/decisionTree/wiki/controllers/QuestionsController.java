@@ -343,7 +343,8 @@ public class QuestionsController {
             questionsDomain.setQuestionHandler(byId.get());
 
             QuestionsDomain save2 = questionsDomainRepository.save(questionsDomain);
-             save2.setNumber(save2.getIdQuestions());
+//             save2.setNumber(save2.getIdQuestions());
+            save2.setNumber(1);
              questionsDomainRepository.save(save2);
 
         }
