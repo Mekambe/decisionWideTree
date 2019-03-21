@@ -16,5 +16,7 @@ public interface TreeLogicService {
     public QuestionDto returnAllTreeQuestions (int id);
     public  QuestionDto mappingTheQuestionsForTheTreeAlgorythm (int questionId,int questionGroupId ) throws IdNotFound;
     public QuestionDtoWithTheMatcher mappingTheQuestionsForTheTreeAlgorythmWithTheMatcher (int questionId, int questionGroupId, int matcher ) throws IdNotFound;
+    List<String> returnListOfStringsContainingTags (List<QuestionGroupDomain> treeBody);
+    public int returnTheNextQuestionNumberInsideTheTree (int tree);
 
 }

@@ -114,20 +114,18 @@ public class QuestionsController {
     @GetMapping("findAllTags")
     public List<String> findAllTags(){
         List<QuestionGroupDomain> all = questionGroupRepository.findAll();
-        List<String> objects = new ArrayList<>();
 
-        for (QuestionGroupDomain tags:all){
-            String tag = tags.getTag();
-            objects.add(tag);
-        }
+        List<String> listofAllTags = treeLogicService.returnListOfStringsContainingTags(all);
+        return listofAllTags;
 
+    }
 
-        String tags = String.join(",",objects);
-        String[] split = tags.split(",");
-        List<String> collect = Arrays.stream(split).distinct().collect(Collectors.toList());
+    @GetMapping("findAllActiveTags")
+    public List<String> findAllActiveTAgs(){
 
-
-        return collect;
+        List<QuestionGroupDomain> all = questionGroupRepository.findAllByActive(true);
+        List<String> listofAllActiveTags = treeLogicService.returnListOfStringsContainingTags(all);
+        return listofAllActiveTags;
     }
 
 
@@ -297,7 +295,8 @@ public class QuestionsController {
 
         Optional<QuestionGroupDomain> questionGroupNumber = questionGroupRepository.findById(newQuestionDto.getQuestionHandler());
         if (questionGroupNumber.isPresent()) {
-            Optional<QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(), questionGroupNumber.get()));
+//            Optional<QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByNumberAndQuestionHandler(newQuestionDto.getNumber(), questionGroupNumber.get()));
+            Optional<QuestionsDomain> question = Optional.ofNullable(questionsDomainRepository.findByIdQuestionsAndQuestionHandler(newQuestionDto.getNumber(), questionGroupNumber.get()));
             if (question.isPresent() && question.get().getQuestionHandler().getIdQuestionGroup() == questionGroupNumber.get().getIdQuestionGroup()) {
 
                 question.get().setQuestion(newQuestionDto.getQuestion());
@@ -313,9 +312,10 @@ public class QuestionsController {
                 questionsDomain.setQuestion(newQuestionDto.getQuestion());
                 questionsDomain.setQuestionHandler(questionGroupNumber.get());
                 questionsDomain.setLink(newQuestionDto.getLink());
+                questionsDomain.setNumber(treeLogicService.returnTheNextQuestionNumberInsideTheTree(newQuestionDto.getQuestionHandler()));
                 QuestionsDomain save = questionsDomainRepository.save(questionsDomain);
-                save.setNumber(save.getIdQuestions());
-                questionsDomainRepository.save(save);
+//                save.setNumber(save.getIdQuestions());
+//                questionsDomainRepository.save(save);
 
                 return  questionsDomain;
 

@@ -18,10 +18,8 @@ import com.decisionTree.wiki.exceptions.IdNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -150,12 +148,48 @@ public class TreeLogicServiceImpl implements TreeLogicService {
 
         return questionDtoWithTheMatcher;
 
+    }
+
+    public List<String> returnListOfStringsContainingTags (List<QuestionGroupDomain> treeBody){
+
+        List<String> objects = new ArrayList<>();
+
+        for (QuestionGroupDomain tags:treeBody){
+            String tag = tags.getTag();
+            objects.add(tag);
+        }
 
 
+        String tags = String.join(",",objects);
+        String[] split = tags.split(",");
+        List<String> collect = Arrays.stream(split).distinct().collect(Collectors.toList());
 
+
+        return collect;
 
 
     }
+
+
+    public int returnTheNextQuestionNumberInsideTheTree (int tree){
+
+        QuestionGroupDomain byIdQuestionGroup = questionGroupRepository.findByIdQuestionGroup(tree);
+        List<QuestionsDomain> groupId = byIdQuestionGroup.getGroupId();
+        List<Integer> listofQuestionNumbers = new ArrayList<>();
+        for (QuestionsDomain listofNumbers : groupId){
+            int number = listofNumbers.getNumber();
+            listofQuestionNumbers.add(number);
+        }
+
+
+        int lastNumber = listofQuestionNumbers.stream().mapToInt(v -> v).max().orElseThrow(NoSuchElementException::new);
+
+        int lastNumberPlusOne = lastNumber + 1;
+
+        return lastNumberPlusOne;
+    }
+
+
 
 
 }
