@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class QuestionsController {
 
 
