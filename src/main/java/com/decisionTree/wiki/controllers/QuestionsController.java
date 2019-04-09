@@ -29,6 +29,10 @@ import java.util.stream.Collectors;
 @RestController
 public class QuestionsController {
 
+
+
+
+
     private QuestionsDomainRepository questionsDomainRepository;
     private TreeLogicService treeLogicService;
     private UsersDomainRepository usersDomainRepository;
@@ -80,6 +84,7 @@ public class QuestionsController {
         return questionsDomainRepository.findAll();
     }
 
+    @CrossOrigin(origins = "C:/Users/j.misiorny/Desktop/Kinguinator/Front/Wersja%203/Kinguinator/dashboard.html")
     @GetMapping("/questionGroup/findAllQQ")
     public List<QuestionGroupDomain> returnAllQuestionGroup(){
         return questionGroupRepository.findAll();
@@ -120,7 +125,10 @@ public class QuestionsController {
 
     }
 
+
+
     @GetMapping("findAllActiveTags")
+    @CrossOrigin(origins = "http://localhost:8090")
     public List<String> findAllActiveTAgs(){
 
         List<QuestionGroupDomain> all = questionGroupRepository.findAllByActive(true);
@@ -287,6 +295,7 @@ public class QuestionsController {
 
 
     }
+
 
 
     @PostMapping("/questions/addQuestionOrUpdate")

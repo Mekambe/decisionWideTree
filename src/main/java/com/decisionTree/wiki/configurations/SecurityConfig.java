@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.web.cors.CorsConfiguration;
 
 
 @Configuration
@@ -44,10 +45,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                http.authorizeRequests()
                 .antMatchers("/**").access("hasRole('USER')")
                 .and().httpBasic();
+//        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
+
 
         http.csrf().disable();
         http.headers().frameOptions().disable();
     }
+
+
+
 
 
 
